@@ -11,6 +11,21 @@ default:: `syn-kubevirt-operator`
 The namespace in which to deploy this component.
 
 
+== `operator`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+operator:
+  replicas: 1
+----
+
+Configure operator.
+
+
 == Example
 
 [source,yaml]

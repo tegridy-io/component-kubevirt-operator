@@ -1,4 +1,10 @@
 parameters:
   kubevirt_operator:
     =_metadata: {}
+
     namespace: syn-kubevirt-operator
+
+    manifestsVersion: v1.1.1
+
+    operator:
+      replicas: 1
