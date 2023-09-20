@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/name: syn-kubevirt-operator
+    kubevirt.io: ''
+    name: syn-kubevirt-operator
+    pod-security.kubernetes.io/enforce: privileged
+  name: syn-kubevirt-operator
