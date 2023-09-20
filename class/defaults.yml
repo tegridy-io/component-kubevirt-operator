@@ -1,0 +1,4 @@
+parameters:
+  kubevirt_operator:
+    =_metadata: {}
+    namespace: syn-kubevirt-operator
