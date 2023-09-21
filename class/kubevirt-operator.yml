@@ -1,5 +1,9 @@
 parameters:
   kapitan:
+    dependencies:
+      - type: https
+        source: https://github.com/kubevirt/kubevirt/releases/download/${kubevirt_operator:manifestsVersion}/kubevirt-operator.yaml
+        output_path: ${_base_directory}/manifests/${kubevirt_operator:manifestsVersion}/kubevirt-operator.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
