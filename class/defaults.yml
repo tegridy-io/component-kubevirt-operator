@@ -9,5 +9,4 @@ parameters:
     operator:
       replicas: 2
 
-    instancePrefix: syn-kubevirt
     instances: {}

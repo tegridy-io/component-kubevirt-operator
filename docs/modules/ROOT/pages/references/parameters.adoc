@@ -46,9 +46,6 @@ Deploy instances, see https://kubevirt.io/user-guide/operations/customize_compon
 ----
 instances:
   default:
-    namespace:
-      annotations: {}
-      labels: {}
     certificateRotateStrategy: {}
     configuration: {}
     customizeComponents: {}
