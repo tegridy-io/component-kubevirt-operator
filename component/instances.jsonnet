@@ -10,33 +10,17 @@ local prefixedName(name) = params.instancePrefix + '-' + name;
 
 // Define outputs below
 {
-  ['20_kubevirt_' + name]: [
-    kube.Namespace(prefixedName(name)) {
-      local spec = std.get(params.instances[name], 'namespace', { labels: {}, annotations: {} }),
-      metadata+: {
-        annotations: spec.annotations,
-        labels+: spec.labels {
-          'app.kubernetes.io/managed-by': 'commodore',
-          'app.kubernetes.io/name': prefixedName(name),
-        },
+  ['20_kubevirt_' + name]: kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
+    local spec = params.instances[name],
+    metadata+: {
+      labels+: {
+        'app.kubernetes.io/managed-by': 'commodore',
+        'app.kubernetes.io/name': name,
+        'app.kubernetes.io/instance': name,
       },
+      namespace: params.namespace,
     },
-    kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
-      local spec = params.instances[name],
-      metadata+: {
-        labels+: {
-          'app.kubernetes.io/managed-by': 'commodore',
-          'app.kubernetes.io/name': 'instance',
-          'app.kubernetes.io/instance': name,
-        },
-        namespace: prefixedName(name),
-      },
-      spec+: {
-        [k]: spec[k]
-        for k in std.objectFields(spec)
-        if k != 'namespace'
-      },
-    },
-  ]
+    spec+: params.instances[name],
+  }
   for name in std.objectFields(params.instances)
 }
