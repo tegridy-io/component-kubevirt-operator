@@ -26,7 +26,7 @@ operator:
 Configure operator.
 
 
-== `instances`
+== `instance`
 
 [horizontal]
 type:: dictionary
@@ -34,10 +34,10 @@ default::
 +
 [source,yaml]
 ----
-instances: {}
+instance: {}
 ----
 
-Deploy instances, see https://kubevirt.io/user-guide/operations/customize_components/[KubeVirt Documentation] for configuration.
+KubeVirt configuration, see https://kubevirt.io/user-guide/operations/customize_components/[KubeVirt Documentation] for specs.
 
 
 == Example
@@ -45,12 +45,11 @@ Deploy instances, see https://kubevirt.io/user-guide/operations/customize_compon
 [source,yaml]
 ----
 instances:
-  default:
-    certificateRotateStrategy: {}
-    configuration: {}
-    customizeComponents: {}
-    imagePullPolicy: IfNotPresent
-    infra:
-      replicas: 1
-    workloadUpdateStrategy: {}
+  certificateRotateStrategy: {}
+  configuration: {}
+  customizeComponents: {}
+  imagePullPolicy: IfNotPresent
+  infra:
+    replicas: 1
+  workloadUpdateStrategy: {}
 ----

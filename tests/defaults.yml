@@ -1,11 +1,8 @@
 parameters:
   kubevirt_operator:
-    instances:
-      default:
-        certificateRotateStrategy: {}
-        configuration: {}
-        customizeComponents: {}
-        imagePullPolicy: IfNotPresent
-        infra:
-          replicas: 1
-        workloadUpdateStrategy: {}
+    instance:
+      certificateRotateStrategy: {}
+      configuration: {}
+      customizeComponents: {}
+      imagePullPolicy: IfNotPresent
+      workloadUpdateStrategy: {}

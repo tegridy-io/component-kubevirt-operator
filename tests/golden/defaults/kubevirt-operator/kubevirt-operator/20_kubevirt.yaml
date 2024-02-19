@@ -3,17 +3,15 @@ kind: KubeVirt
 metadata:
   annotations: {}
   labels:
-    app.kubernetes.io/instance: default
+    app.kubernetes.io/instance: instance
     app.kubernetes.io/managed-by: commodore
-    app.kubernetes.io/name: default
-    name: default
-  name: default
+    app.kubernetes.io/name: instance
+    name: instance
+  name: instance
   namespace: syn-kubevirt-operator
 spec:
   certificateRotateStrategy: {}
   configuration: {}
   customizeComponents: {}
   imagePullPolicy: IfNotPresent
-  infra:
-    replicas: 1
   workloadUpdateStrategy: {}
