@@ -1,9 +1,9 @@
 // main template for kubevirt-operator
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
-local inv = kap.inventory();
 
 // The hiera parameters for the component
+local inv = kap.inventory();
 local params = inv.parameters.kubevirt_operator;
 local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 
@@ -77,5 +77,5 @@ local deployment = [
   '00_crds': std.filter(function(it) it.kind == 'CustomResourceDefinition', manifests),
   '00_priorityclass': std.filter(function(it) it.kind == 'PriorityClass', manifests),
   '10_rbac': serviceAccount + clusterRole + role + [ clusterRoleBinding, roleBinding ],
-  '20_deployment': deployment,
+  '10_deployment': deployment,
 }

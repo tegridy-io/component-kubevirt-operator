@@ -13,3 +13,7 @@ parameters:
           - ${_base_directory}/component/main.jsonnet
         input_type: jsonnet
         output_path: kubevirt-operator/
+      - input_paths:
+          - ${_base_directory}/component/instances.jsonnet
+        input_type: jsonnet
+        output_path: kubevirt-operator/

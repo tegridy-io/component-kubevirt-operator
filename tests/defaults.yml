@@ -1,3 +1,14 @@
-# Overwrite parameters here
-
-# parameters: {...}
+parameters:
+  kubevirt_operator:
+    instances:
+      default:
+        namespace:
+          annotations: {}
+          labels: {}
+        certificateRotateStrategy: {}
+        configuration: {}
+        customizeComponents: {}
+        imagePullPolicy: IfNotPresent
+        infra:
+          replicas: 1
+        workloadUpdateStrategy: {}
