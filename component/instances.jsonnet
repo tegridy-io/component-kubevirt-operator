@@ -10,7 +10,7 @@ local prefixedName(name) = params.instancePrefix + '-' + name;
 
 // Define outputs below
 {
-  ['20_kubevirt_' + name]: kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
+  ['20_kubevirt_' + name]: kube._Object('kubevirt.io/v1', 'KubeVirt', name) {
     local spec = params.instances[name],
     metadata+: {
       labels+: {
