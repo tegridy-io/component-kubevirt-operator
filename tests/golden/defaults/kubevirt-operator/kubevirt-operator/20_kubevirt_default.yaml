@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/instance: default
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: default
-    name: instance
-  name: instance
+    name: default
+  name: default
   namespace: syn-kubevirt-operator
 spec:
   certificateRotateStrategy: {}
