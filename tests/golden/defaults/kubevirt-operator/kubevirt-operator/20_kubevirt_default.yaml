@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: syn-kubevirt-default
+    name: syn-kubevirt-default
+  name: syn-kubevirt-default
+---
+apiVersion: kubevirt.io/v1
+kind: KubeVirt
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: instance
+    name: instance
+  name: instance
+  namespace: syn-kubevirt-default
+spec:
+  certificateRotateStrategy: {}
+  configuration: {}
+  customizeComponents: {}
+  imagePullPolicy: IfNotPresent
+  infra:
+    replicas: 1
+  workloadUpdateStrategy: {}
