@@ -9,4 +9,4 @@ parameters:
     operator:
       replicas: 2
 
-    instances: {}
+    instance: {}

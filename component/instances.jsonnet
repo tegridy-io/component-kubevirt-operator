@@ -6,21 +6,17 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.kubevirt_operator;
 
-local prefixedName(name) = params.instancePrefix + '-' + name;
-
 // Define outputs below
 {
-  ['20_kubevirt_' + name]: kube._Object('kubevirt.io/v1', 'KubeVirt', name) {
-    local spec = params.instances[name],
+  '20_kubevirt': kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
-        'app.kubernetes.io/name': name,
-        'app.kubernetes.io/instance': name,
+        'app.kubernetes.io/name': 'instance',
+        'app.kubernetes.io/instance': 'instance',
       },
       namespace: params.namespace,
     },
-    spec+: params.instances[name],
-  }
-  for name in std.objectFields(params.instances)
+    spec+: params.instance,
+  },
 }
