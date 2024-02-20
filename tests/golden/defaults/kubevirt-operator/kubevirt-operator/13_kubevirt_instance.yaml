@@ -6,7 +6,6 @@ metadata:
     app.kubernetes.io/instance: instance
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: instance
-    name: instance
   name: instance
   namespace: syn-kubevirt-operator
 spec:

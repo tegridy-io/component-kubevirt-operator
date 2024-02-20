@@ -1,11 +1,5 @@
 parameters:
   kubevirt_operator:
-    kubevirt:
-      certificateRotateStrategy: {}
-      configuration: {}
-      customizeComponents: {}
-      imagePullPolicy: IfNotPresent
-      workloadUpdateStrategy: {}
 
     instanceTypes:
       xsmall:

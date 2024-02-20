@@ -2,17 +2,21 @@ parameters:
   kubevirt_operator:
     =_metadata: {}
 
-    namespace:
-      annotations: {}
-      labels:
-        kubevirt.io: ''
-        pod-security.kubernetes.io/enforce: privileged
-      name: syn-kubevirt-operator
-
-    manifestsVersion: v1.1.1
-
-    operator:
+    kubevirt:
+      version: v1.1.1
+      namespace:
+        annotations: {}
+        labels:
+          kubevirt.io: ''
+          pod-security.kubernetes.io/enforce: privileged
+        name: syn-kubevirt-operator
       replicas: 1
+      spec:
+        certificateRotateStrategy: {}
+        configuration: {}
+        customizeComponents: {}
+        imagePullPolicy: IfNotPresent
+        workloadUpdateStrategy: {}
 
     importer:
       version: v1.58.1
@@ -36,8 +40,6 @@ parameters:
         workload:
           nodeSelector:
             kubernetes.io/os: linux
-
-    kubevirt: {}
 
     instanceTypes: {}
     instancePreferences: {}
