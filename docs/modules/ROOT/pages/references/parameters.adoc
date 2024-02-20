@@ -36,7 +36,7 @@ operator:
 Configure operator.
 
 
-== `instance`
+== `kubevirt`
 
 [horizontal]
 type:: dictionary
@@ -44,22 +44,58 @@ default::
 +
 [source,yaml]
 ----
-instance: {}
+kubevirt: {}
 ----
 
 KubeVirt configuration, see https://kubevirt.io/user-guide/operations/customize_components/[KubeVirt Documentation] for specs.
+
+
+== `instanceTypes`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+instanceTypes: {}
+----
+
+ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
+
+
+== `instancePreferences`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+instancePreferences: {}
+----
+
+ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
 
 
 == Example
 
 [source,yaml]
 ----
-instances:
-  certificateRotateStrategy: {}
-  configuration: {}
-  customizeComponents: {}
-  imagePullPolicy: IfNotPresent
-  infra:
-    replicas: 1
-  workloadUpdateStrategy: {}
+kubevirt_operator:
+  kubevirt:
+    certificateRotateStrategy: {}
+    configuration: {}
+    customizeComponents: {}
+    imagePullPolicy: IfNotPresent
+    infra:
+      replicas: 1
+    workloadUpdateStrategy: {}
+
+  instanceTypes:
+    small-4:
+      cpu:
+        guest: 2
+      memory:
+        quest: 4Gi
 ----

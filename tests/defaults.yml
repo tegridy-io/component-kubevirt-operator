@@ -1,8 +1,30 @@
 parameters:
   kubevirt_operator:
-    instance:
+    kubevirt:
       certificateRotateStrategy: {}
       configuration: {}
       customizeComponents: {}
       imagePullPolicy: IfNotPresent
       workloadUpdateStrategy: {}
+
+    instanceTypes:
+      xsmall:
+        cpu:
+          guest: 1
+        memory:
+          quest: 512Mi
+      small-4:
+        cpu:
+          guest: 2
+        memory:
+          quest: 4Gi
+      small-8:
+        cpu:
+          guest: 2
+        memory:
+          quest: 8Gi
+
+    instancePreferences:
+      virtio:
+        devices:
+          preferredDiskBus: virtio

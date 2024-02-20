@@ -14,4 +14,7 @@ parameters:
     operator:
       replicas: 1
 
-    instance: {}
+    kubevirt: {}
+
+    instanceTypes: {}
+    instancePreferences: {}
