@@ -14,6 +14,29 @@ parameters:
     operator:
       replicas: 1
 
+    importer:
+      version: v1.58.1
+      namespace:
+        annotations: {}
+        labels:
+          cdi.kubevirt.io: ''
+        name: syn-kubevirt-cdi
+      replicas: 1
+      spec:
+        config:
+          featureGates:
+            - HonorWaitForFirstConsumer
+        imagePullPolicy: IfNotPresent
+        infra:
+          nodeSelector:
+            kubernetes.io/os: linux
+          tolerations:
+            - key: CriticalAddonsOnly
+              operator: Exists
+        workload:
+          nodeSelector:
+            kubernetes.io/os: linux
+
     kubevirt: {}
 
     instanceTypes: {}
