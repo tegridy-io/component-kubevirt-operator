@@ -6,5 +6,13 @@ local argocd = import 'lib/argocd.libjsonnet';
 local app = argocd.App('kubevirt-operator', params.kubevirt.namespace.name);
 
 {
-  'kubevirt-operator': app,
+  'kubevirt-operator': app {
+    spec+: {
+      syncPolicy+: {
+        syncOptions+: [
+          'ServerSideApply=true',
+        ],
+      },
+    },
+  },
 }
