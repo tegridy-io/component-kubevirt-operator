@@ -36,7 +36,7 @@ local role = [
   for it in std.filter(function(it) it.kind == 'Role', manifests)
 ];
 
-local clusterRoleBinding = kube.ClusterRoleBinding('kubevirt-operator') {
+local clusterRoleBinding = kube.ClusterRoleBinding('cdi-operator') {
   metadata+: {
     labels: {
       'operator.cdi.kubevirt.io': '',
@@ -46,7 +46,7 @@ local clusterRoleBinding = kube.ClusterRoleBinding('kubevirt-operator') {
   subjects_: serviceAccount,
 };
 
-local roleBinding = kube.RoleBinding('kubevirt-operator') {
+local roleBinding = kube.RoleBinding('cdi-operator') {
   metadata+: {
     labels: {
       'cdi.kubevirt.io': '',
