@@ -23,3 +23,8 @@ parameters:
           guest: 2
         memory:
           quest: 8Gi
+
+    instancePreferences:
+      virtio:
+        devices:
+          preferredDiskBus: virtio

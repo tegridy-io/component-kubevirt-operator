@@ -1,0 +1,12 @@
+apiVersion: instancetype.kubevirt.io/v1beta1
+kind: VirtualMachineClusterPreference
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: virtio
+    name: virtio
+  name: virtio
+spec:
+  devices:
+    preferredDiskBus: virtio

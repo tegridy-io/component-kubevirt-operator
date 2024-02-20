@@ -64,6 +64,20 @@ instanceTypes: {}
 ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
 
 
+== `instancePreferences`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+instancePreferences: {}
+----
+
+ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
+
+
 == Example
 
 [source,yaml]
