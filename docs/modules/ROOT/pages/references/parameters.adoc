@@ -6,7 +6,17 @@ The parent key for all of the following parameters is `kubevirt_operator`.
 
 [horizontal]
 type:: string
-default:: `syn-kubevirt-operator`
+default::
++
+[source,yaml]
+----
+namespace:
+  annotations: {}
+  labels:
+    kubevirt.io: ''
+    pod-security.kubernetes.io/enforce: privileged
+  name: syn-kubevirt-operator
+----
 
 The namespace in which to deploy this component.
 
@@ -20,7 +30,7 @@ default::
 [source,yaml]
 ----
 operator:
-  replicas: 2
+  replicas: 1
 ----
 
 Configure operator.
