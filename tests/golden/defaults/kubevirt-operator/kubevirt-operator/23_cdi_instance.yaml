@@ -1,0 +1,24 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: CDI
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/instance: instance
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: instance
+  name: instance
+  namespace: syn-kubevirt-cdi
+spec:
+  config:
+    featureGates:
+      - HonorWaitForFirstConsumer
+  imagePullPolicy: IfNotPresent
+  infra:
+    nodeSelector:
+      kubernetes.io/os: linux
+    tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+  workload:
+    nodeSelector:
+      kubernetes.io/os: linux

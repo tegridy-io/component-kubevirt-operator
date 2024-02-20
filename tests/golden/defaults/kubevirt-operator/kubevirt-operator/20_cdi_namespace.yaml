@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations: {}
+  labels:
+    cdi.kubevirt.io: ''
+    name: syn-kubevirt-cdi
+  name: syn-kubevirt-cdi
