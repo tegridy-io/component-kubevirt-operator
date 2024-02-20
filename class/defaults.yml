@@ -2,11 +2,16 @@ parameters:
   kubevirt_operator:
     =_metadata: {}
 
-    namespace: syn-kubevirt-operator
+    namespace:
+      annotations: {}
+      labels:
+        kubevirt.io: ''
+        pod-security.kubernetes.io/enforce: privileged
+      name: syn-kubevirt-operator
 
     manifestsVersion: v1.1.1
 
     operator:
-      replicas: 2
+      replicas: 1
 
     instance: {}

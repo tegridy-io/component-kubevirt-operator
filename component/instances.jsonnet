@@ -15,7 +15,7 @@ local params = inv.parameters.kubevirt_operator;
         'app.kubernetes.io/name': 'instance',
         'app.kubernetes.io/instance': 'instance',
       },
-      namespace: params.namespace,
+      namespace: params.namespace.name,
     },
     spec+: params.instance,
   },
