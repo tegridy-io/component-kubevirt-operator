@@ -1,22 +1,92 @@
 // main template for kubevirt-operator
+local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 
 // The hiera parameters for the component
 local inv = kap.inventory();
-local params = inv.parameters.kubevirt_operator;
+local params = inv.parameters.kubevirt_operator.kubevirt;
+local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
+
+// Namespace
+local namespace = kube.Namespace(params.namespace.name) {
+  metadata+: {
+    annotations+: params.namespace.annotations,
+    labels+: {
+      // Configure the namespaces so that the OCP4 cluster-monitoring
+      // Prometheus can find the servicemonitors and rules.
+      [if isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
+    } + com.makeMergeable(params.namespace.labels),
+  },
+};
+
+// Manifests
+local manifests = std.parseJson(kap.yaml_load_stream('kubevirt-operator/manifests/kubevirt-%s/kubevirt-operator.yaml' % params.version));
+
+local serviceAccount = [
+  it { metadata+: { namespace: params.namespace.name } }
+  for it in std.filter(function(it) it.kind == 'ServiceAccount', manifests)
+];
+
+
+local clusterRole = std.filter(function(it) it.kind == 'ClusterRole', manifests);
+
+local role = [
+  it { metadata+: { namespace: params.namespace.name } }
+  for it in std.filter(function(it) it.kind == 'Role', manifests)
+];
+
+local clusterRoleBinding = kube.ClusterRoleBinding('kubevirt-operator') {
+  metadata+: {
+    labels: {
+      'kubevirt.io': '',
+    },
+  },
+  roleRef_: clusterRole[1],
+  subjects_: serviceAccount,
+};
+
+local roleBinding = kube.RoleBinding('kubevirt-operator') {
+  metadata+: {
+    labels: {
+      'kubevirt.io': '',
+    },
+    namespace: params.namespace.name,
+  },
+  roleRef_: role[0],
+  subjects_: serviceAccount,
+};
+
+local deployment = [
+  it {
+    metadata+: {
+      namespace: params.namespace.name,
+    },
+    spec+: {
+      replicas: params.replicas,
+    },
+  }
+  for it in std.filter(function(it) it.kind == 'Deployment', manifests)
+];
+
+local instance = kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
+  metadata+: {
+    labels: {
+      'app.kubernetes.io/managed-by': 'commodore',
+      'app.kubernetes.io/name': 'instance',
+      'app.kubernetes.io/instance': 'instance',
+    },
+    namespace: params.namespace.name,
+  },
+  spec+: params.spec,
+};
 
 // Define outputs below
 {
-  '20_kubevirt': kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
-    metadata+: {
-      labels+: {
-        'app.kubernetes.io/managed-by': 'commodore',
-        'app.kubernetes.io/name': 'instance',
-        'app.kubernetes.io/instance': 'instance',
-      },
-      namespace: params.namespace.name,
-    },
-    spec+: params.kubevirt,
-  },
+  '10_kubevirt_namespace': namespace,
+  '10_kubevirt_crds': std.filter(function(it) it.kind == 'CustomResourceDefinition', manifests),
+  '10_kubevirt_priorityclass': std.filter(function(it) it.kind == 'PriorityClass', manifests),
+  '11_kubevirt_rbac': serviceAccount + clusterRole + role + [ clusterRoleBinding, roleBinding ],
+  '12_kubevirt_deployment': deployment,
+  '13_kubevirt_instance': instance,
 }

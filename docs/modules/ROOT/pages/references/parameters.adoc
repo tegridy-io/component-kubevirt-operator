@@ -2,26 +2,8 @@
 
 The parent key for all of the following parameters is `kubevirt_operator`.
 
-== `namespace`
 
-[horizontal]
-type:: string
-default::
-+
-[source,yaml]
-----
-namespace:
-  annotations: {}
-  labels:
-    kubevirt.io: ''
-    pod-security.kubernetes.io/enforce: privileged
-  name: syn-kubevirt-operator
-----
-
-The namespace in which to deploy this component.
-
-
-== `operator`
+== `kubevirt`
 
 [horizontal]
 type:: dictionary
@@ -29,11 +11,28 @@ default::
 +
 [source,yaml]
 ----
-operator:
-  replicas: 1
+kubevirt:
+  version: v1.1.1 <1>
+  namespace: <2>
+    annotations: {}
+    labels:
+      kubevirt.io: ''
+      pod-security.kubernetes.io/enforce: privileged
+    name: syn-kubevirt-operator
+  replicas: 1 <3>
+  spec: <4>
+    certificateRotateStrategy: {}
+    configuration: {}
+    customizeComponents: {}
+    imagePullPolicy: IfNotPresent
+    workloadUpdateStrategy: {}
 ----
+<1> KubeVirt version.
+<2> Configure KubeVirt namespace.
+<3> Configure KubeVirt operator replicas.
+<4> Define KubeVirt instance.
 
-Configure operator.
+KubeVirt configuration, see https://kubevirt.io/user-guide/operations/customize_components/[KubeVirt Documentation] for specs.
 
 
 == `importer`
@@ -75,20 +74,6 @@ importer:
 See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[CDI Documentation] for specs.
 
 
-== `kubevirt`
-
-[horizontal]
-type:: dictionary
-default::
-+
-[source,yaml]
-----
-kubevirt: {}
-----
-
-KubeVirt configuration, see https://kubevirt.io/user-guide/operations/customize_components/[KubeVirt Documentation] for specs.
-
-
 == `instanceTypes`
 
 [horizontal]
@@ -122,15 +107,6 @@ ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_m
 [source,yaml]
 ----
 kubevirt_operator:
-  kubevirt:
-    certificateRotateStrategy: {}
-    configuration: {}
-    customizeComponents: {}
-    imagePullPolicy: IfNotPresent
-    infra:
-      replicas: 1
-    workloadUpdateStrategy: {}
-
   instanceTypes:
     small-4:
       cpu:
