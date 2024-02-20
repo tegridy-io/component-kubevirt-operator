@@ -488,7 +488,7 @@ metadata:
   annotations: {}
   labels:
     operator.cdi.kubevirt.io: ''
-  name: kubevirt-operator
+  name: cdi-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -504,7 +504,7 @@ metadata:
   annotations: {}
   labels:
     cdi.kubevirt.io: ''
-  name: kubevirt-operator
+  name: cdi-operator
   namespace: syn-kubevirt-cdi
 roleRef:
   apiGroup: rbac.authorization.k8s.io
