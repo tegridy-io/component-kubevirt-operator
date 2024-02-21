@@ -8,38 +8,39 @@ local helper = import 'helper.libsonnet';
 
 // The hiera parameters for the component
 local inv = kap.inventory();
-local operator = inv.parameters.kubevirt_operator.operators.hyperconverged;
+local kubevirt = inv.parameters.kubevirt_operator.operators.kubevirt;
+local hyperconverged = inv.parameters.kubevirt_operator.operators.hyperconverged;
 
+local packageName = if helper.isOpenshift then 'kubevirt-hyperconverged' else 'community-kubevirt-hyperconverged';
+local catalog = if helper.isOpenshift then 'redhat-operators' else 'operatorhubio-catalog';
+
+local operatorGroup = olm.OperatorGroup('kubevirt-operators') {
+  metadata+: {
+    namespace: kubevirt.namespace.name,
+  },
+  spec: {
+    targetNamespaces: [
+      kubevirt.namespace.name,
+    ],
+  },
+};
+
+local subscription = olm.namespacedSubscription(
+  kubevirt.namespace,
+  packageName,
+  hyperconverged.channel,
+  catalog,
+) {
+  spec+: {
+    config+: {
+      resources: hyperconverged.resources,
+    },
+  },
+};
 
 // Define outputs below
-if operator.enabled then
+if helper.hasHyperconverged then
   {
-    '50_operator_group': olm.OperatorGroup('kubevirt-operators') {
-      metadata+: {
-        namespace: params.namespace.name,
-      },
-      spec: {
-        targetNamespaces: [
-          params.namespace.name,
-        ],
-      },
-    },
-    '50_subscriptions': [
-      olm.namespacedSubscription(
-        params.namespace,
-        'kubevirt',
-        params.channel,
-        'redhat-operators'
-      ) {
-        spec+: {
-          config+: {
-            resources: params.operatorResources.clusterLogging,
-          },
-        },
-      },
-    ],
-  } + {
-    '10_operator_source': kube._Object('operators.coreos.com/v1', 'OperatorSource', 'kubevirt') {
-
-    },
+    '00_operator_group': operatorGroup,
+    '10_subscription': subscription,
   }

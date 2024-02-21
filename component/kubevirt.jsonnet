@@ -42,5 +42,6 @@ if helper.hasKubevirt then
     '10_bundle': helper.load('kubevirt-%s/kubevirt-operator.yaml' % operator.version, operator.namespace.name),
     '20_instance': instance,
   } else {
+  '00_namespace': namespace,
   '20_instance': instance,
 }

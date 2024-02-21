@@ -1,0 +1,21 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorSource
+metadata:
+  annotations: {}
+  labels:
+    name: community-kubevirt-hyperconverged
+  name: community-kubevirt-hyperconverged
+  namespace:
+    annotations: {}
+    labels:
+      kubevirt.io: ''
+      pod-security.kubernetes.io/enforce: privileged
+    name: syn-kubevirt-operator
+spec:
+  channel: stable
+  config:
+    resources: {}
+  installPlanApproval: Automatic
+  name: community-kubevirt-hyperconverged
+  source: operatorhubio-catalog
+  sourceNamespace: syn-operator-lifecycle-manager

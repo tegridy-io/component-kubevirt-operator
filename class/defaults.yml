@@ -27,6 +27,7 @@ parameters:
       hyperconverged:
         enabled: false
         channel: stable
+        resources: {}
 
     config:
       kubevirt:
