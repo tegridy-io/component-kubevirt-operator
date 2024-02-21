@@ -2,31 +2,37 @@ parameters:
   kubevirt_operator:
     =_metadata: {}
 
-    kubevirt:
-      version: v1.1.1
-      namespace:
-        annotations: {}
-        labels:
-          kubevirt.io: ''
-          pod-security.kubernetes.io/enforce: privileged
-        name: syn-kubevirt-operator
-      replicas: 1
-      spec:
+    operators:
+      kubevirt:
+        enabled: true
+        version: v1.1.1
+        namespace:
+          annotations: {}
+          labels:
+            kubevirt.io: ''
+            pod-security.kubernetes.io/enforce: privileged
+          name: syn-kubevirt-operator
+        replicas: 1
+
+      importer:
+        enabled: true
+        version: v1.58.1
+        namespace:
+          annotations: {}
+          labels:
+            cdi.kubevirt.io: ''
+          name: syn-kubevirt-cdi
+        replicas: 1
+
+    config:
+      kubevirt:
         certificateRotateStrategy: {}
         configuration: {}
         customizeComponents: {}
         imagePullPolicy: IfNotPresent
         workloadUpdateStrategy: {}
 
-    importer:
-      version: v1.58.1
-      namespace:
-        annotations: {}
-        labels:
-          cdi.kubevirt.io: ''
-        name: syn-kubevirt-cdi
-      replicas: 1
-      spec:
+      importer:
         config:
           featureGates:
             - HonorWaitForFirstConsumer
@@ -41,5 +47,6 @@ parameters:
           nodeSelector:
             kubernetes.io/os: linux
 
-    instanceTypes: {}
-    instancePreferences: {}
+    cluster:
+      types: {}
+      preferences: {}

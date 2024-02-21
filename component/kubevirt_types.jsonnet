@@ -4,29 +4,29 @@ local kube = import 'lib/kube.libjsonnet';
 
 // The hiera parameters for the component
 local inv = kap.inventory();
-local params = inv.parameters.kubevirt_operator;
+local cluster = inv.parameters.kubevirt_operator.cluster;
 
 // Define outputs below
 {
-  ['31_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
+  ['30_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
         'app.kubernetes.io/name': name,
       },
     },
-    spec+: params.instanceTypes[name],
+    spec+: cluster.types[name],
   }
-  for name in std.objectFields(params.instanceTypes)
+  for name in std.objectFields(cluster.types)
 } + {
-  ['32_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
+  ['40_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
         'app.kubernetes.io/name': name,
       },
     },
-    spec+: params.instancePreferences[name],
+    spec+: cluster.preferences[name],
   }
-  for name in std.objectFields(params.instancePreferences)
+  for name in std.objectFields(cluster.preferences)
 }
