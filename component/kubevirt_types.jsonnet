@@ -8,7 +8,7 @@ local params = inv.parameters.kubevirt_operator;
 
 // Define outputs below
 {
-  ['31_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
+  ['30_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
@@ -19,7 +19,7 @@ local params = inv.parameters.kubevirt_operator;
   }
   for name in std.objectFields(params.instanceTypes)
 } + {
-  ['32_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
+  ['40_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',

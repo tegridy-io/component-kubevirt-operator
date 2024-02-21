@@ -3,9 +3,11 @@ local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 
+local helper = import 'helper.libsonnet';
+
 // The hiera parameters for the component
 local inv = kap.inventory();
-local params = inv.parameters.kubevirt_operator.kubevirt;
+local params = inv.parameters.kubevirt_operator.operators.kubevirt;
 local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 
 // Namespace
@@ -20,55 +22,7 @@ local namespace = kube.Namespace(params.namespace.name) {
   },
 };
 
-// Manifests
-local manifests = std.parseJson(kap.yaml_load_stream('kubevirt-operator/manifests/kubevirt-%s/kubevirt-operator.yaml' % params.version));
-
-local serviceAccount = [
-  it { metadata+: { namespace: params.namespace.name } }
-  for it in std.filter(function(it) it.kind == 'ServiceAccount', manifests)
-];
-
-
-local clusterRole = std.filter(function(it) it.kind == 'ClusterRole', manifests);
-
-local role = [
-  it { metadata+: { namespace: params.namespace.name } }
-  for it in std.filter(function(it) it.kind == 'Role', manifests)
-];
-
-local clusterRoleBinding = kube.ClusterRoleBinding('kubevirt-operator') {
-  metadata+: {
-    labels: {
-      'kubevirt.io': '',
-    },
-  },
-  roleRef_: clusterRole[1],
-  subjects_: serviceAccount,
-};
-
-local roleBinding = kube.RoleBinding('kubevirt-operator') {
-  metadata+: {
-    labels: {
-      'kubevirt.io': '',
-    },
-    namespace: params.namespace.name,
-  },
-  roleRef_: role[0],
-  subjects_: serviceAccount,
-};
-
-local deployment = [
-  it {
-    metadata+: {
-      namespace: params.namespace.name,
-    },
-    spec+: {
-      replicas: params.replicas,
-    },
-  }
-  for it in std.filter(function(it) it.kind == 'Deployment', manifests)
-];
-
+// Instance
 local instance = kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
   metadata+: {
     labels: {
@@ -78,15 +32,13 @@ local instance = kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
     },
     namespace: params.namespace.name,
   },
-  spec+: params.spec,
+  spec: inv.parameters.kubevirt_operator.kubevirt,
 };
 
 // Define outputs below
-{
-  '10_kubevirt_namespace': namespace,
-  '10_kubevirt_crds': std.filter(function(it) it.kind == 'CustomResourceDefinition', manifests),
-  '10_kubevirt_priorityclass': std.filter(function(it) it.kind == 'PriorityClass', manifests),
-  '11_kubevirt_rbac': serviceAccount + clusterRole + role + [ clusterRoleBinding, roleBinding ],
-  '12_kubevirt_deployment': deployment,
-  '13_kubevirt_instance': instance,
-}
+if params.enabled then
+  {
+    '00_namespace': namespace,
+    '10_bundle': helper.load('kubevirt-%s/kubevirt-operator.yaml' % params.version, params.namespace.name),
+    '20_instance': instance,
+  }

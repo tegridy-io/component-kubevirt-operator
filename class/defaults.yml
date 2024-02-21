@@ -2,44 +2,48 @@ parameters:
   kubevirt_operator:
     =_metadata: {}
 
+    operators:
+      kubevirt:
+        enabled: true
+        version: v1.1.1
+        namespace:
+          annotations: {}
+          labels:
+            kubevirt.io: ''
+            pod-security.kubernetes.io/enforce: privileged
+          name: syn-kubevirt-operator
+        replicas: 1
+      importer:
+        enabled: true
+        version: v1.58.1
+        namespace:
+          annotations: {}
+          labels:
+            cdi.kubevirt.io: ''
+          name: syn-kubevirt-cdi
+        replicas: 1
+
     kubevirt:
-      version: v1.1.1
-      namespace:
-        annotations: {}
-        labels:
-          kubevirt.io: ''
-          pod-security.kubernetes.io/enforce: privileged
-        name: syn-kubevirt-operator
-      replicas: 1
-      spec:
-        certificateRotateStrategy: {}
-        configuration: {}
-        customizeComponents: {}
-        imagePullPolicy: IfNotPresent
-        workloadUpdateStrategy: {}
+      certificateRotateStrategy: {}
+      configuration: {}
+      customizeComponents: {}
+      imagePullPolicy: IfNotPresent
+      workloadUpdateStrategy: {}
 
     importer:
-      version: v1.58.1
-      namespace:
-        annotations: {}
-        labels:
-          cdi.kubevirt.io: ''
-        name: syn-kubevirt-cdi
-      replicas: 1
-      spec:
-        config:
-          featureGates:
-            - HonorWaitForFirstConsumer
-        imagePullPolicy: IfNotPresent
-        infra:
-          nodeSelector:
-            kubernetes.io/os: linux
-          tolerations:
-            - key: CriticalAddonsOnly
-              operator: Exists
-        workload:
-          nodeSelector:
-            kubernetes.io/os: linux
+      config:
+        featureGates:
+          - HonorWaitForFirstConsumer
+      imagePullPolicy: IfNotPresent
+      infra:
+        nodeSelector:
+          kubernetes.io/os: linux
+        tolerations:
+          - key: CriticalAddonsOnly
+            operator: Exists
+      workload:
+        nodeSelector:
+          kubernetes.io/os: linux
 
     instanceTypes: {}
     instancePreferences: {}

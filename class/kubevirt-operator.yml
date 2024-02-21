@@ -2,11 +2,11 @@ parameters:
   kapitan:
     dependencies:
       - type: https
-        source: https://github.com/kubevirt/kubevirt/releases/download/${kubevirt_operator:kubevirt:version}/kubevirt-operator.yaml
-        output_path: ${_base_directory}/manifests/kubevirt-${kubevirt_operator:kubevirt:version}/kubevirt-operator.yaml
+        source: https://github.com/kubevirt/kubevirt/releases/download/${kubevirt_operator:operators:kubevirt:version}/kubevirt-operator.yaml
+        output_path: ${_base_directory}/manifests/kubevirt-${kubevirt_operator:operators:kubevirt:version}/kubevirt-operator.yaml
       - type: https
-        source: https://github.com/kubevirt/containerized-data-importer/releases/download/${kubevirt_operator:importer:version}/cdi-operator.yaml
-        output_path: ${_base_directory}/manifests/cdi-${kubevirt_operator:importer:version}/cdi-operator.yaml
+        source: https://github.com/kubevirt/containerized-data-importer/releases/download/${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
+        output_path: ${_base_directory}/manifests/cdi-${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
@@ -15,12 +15,12 @@ parameters:
       - input_paths:
           - ${_base_directory}/component/importer.jsonnet
         input_type: jsonnet
-        output_path: kubevirt-operator/
+        output_path: kubevirt-operator/importer/
       - input_paths:
           - ${_base_directory}/component/kubevirt.jsonnet
         input_type: jsonnet
-        output_path: kubevirt-operator/
+        output_path: kubevirt-operator/kubevirt/
       - input_paths:
-          - ${_base_directory}/component/main.jsonnet
+          - ${_base_directory}/component/kubevirt_types.jsonnet
         input_type: jsonnet
-        output_path: kubevirt-operator/
+        output_path: kubevirt-operator/kubevirt/
