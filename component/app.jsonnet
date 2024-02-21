@@ -1,14 +1,14 @@
 local kap = import 'lib/kapitan.libjsonnet';
 local inv = kap.inventory();
-local params = inv.parameters.kubevirt_operator;
+local operators = inv.parameters.kubevirt_operator.operators;
 local argocd = import 'lib/argocd.libjsonnet';
 
-local app = argocd.App('kubevirt-operator', params.kubevirt.namespace.name);
-local hasKubevirt = params.operators.kubevirt.enabled;
-local hasImporter = params.operators.importer.enabled;
+local helper = import 'helper.libsonnet';
+
+local app = argocd.App('kubevirt-operator', operators.kubevirt.namespace.name);
 
 {
-  [if hasKubevirt then 'kubevirt-operator']: app {
+  [if helper.hasKubevirt then 'kubevirt-operator']: app {
     spec+: {
       source: {
         path: 'manifests/kubevirt-operator/kubevirt',
@@ -20,10 +20,22 @@ local hasImporter = params.operators.importer.enabled;
       },
     },
   },
-  [if hasImporter then 'kubevirt-cdi']: app {
+  [if helper.hasImporter then 'kubevirt-cdi']: app {
     spec+: {
       source: {
         path: 'manifests/kubevirt-operator/importer',
+      },
+      syncPolicy+: {
+        syncOptions+: [
+          'ServerSideApply=true',
+        ],
+      },
+    },
+  },
+  [if helper.hasHyperconverged then 'kubevirt-operator']: app {
+    spec+: {
+      source: {
+        path: 'manifests/kubevirt-operator',
       },
       syncPolicy+: {
         syncOptions+: [

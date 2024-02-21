@@ -24,6 +24,10 @@ parameters:
           name: syn-kubevirt-cdi
         replicas: 1
 
+      hyperconverged:
+        enabled: false
+        channel: stable
+
     config:
       kubevirt:
         certificateRotateStrategy: {}

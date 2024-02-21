@@ -9,7 +9,6 @@ local helper = import 'helper.libsonnet';
 local inv = kap.inventory();
 local operator = inv.parameters.kubevirt_operator.operators.kubevirt;
 local config = inv.parameters.kubevirt_operator.config.kubevirt;
-local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 
 // Namespace
 local namespace = kube.Namespace(operator.namespace.name) {
@@ -18,7 +17,7 @@ local namespace = kube.Namespace(operator.namespace.name) {
     labels+: {
       // Configure the namespaces so that the OCP4 cluster-monitoring
       // Prometheus can find the servicemonitors and rules.
-      [if isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
+      [if helper.isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
     } + com.makeMergeable(operator.namespace.labels),
   },
 };
@@ -37,9 +36,11 @@ local instance = kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
 };
 
 // Define outputs below
-if operator.enabled then
+if helper.hasKubevirt then
   {
     '00_namespace': namespace,
     '10_bundle': helper.load('kubevirt-%s/kubevirt-operator.yaml' % operator.version, operator.namespace.name),
     '20_instance': instance,
-  }
+  } else {
+  '20_instance': instance,
+}

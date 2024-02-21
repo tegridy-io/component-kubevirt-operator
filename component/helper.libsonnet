@@ -1,4 +1,6 @@
 local kap = import 'lib/kapitan.libjsonnet';
+local inv = kap.inventory();
+local operators = inv.parameters.kubevirt_operator.operators;
 
 local clusterScoped = [
   'ClusterRole',
@@ -37,4 +39,8 @@ local patchManifests(path, namespace) = std.map(
 
 {
   load: patchManifests,
+  hasKubevirt: if operators.kubevirt.enabled && !operators.hyperconverged.enabled then true else false,
+  hasImporter: if operators.importer.enabled && !operators.hyperconverged.enabled then true else false,
+  hasHyperconverged: operators.hyperconverged.enabled,
+  isOpenshift: std.startsWith(inv.parameters.facts.distribution, 'openshift'),
 }
