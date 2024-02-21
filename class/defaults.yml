@@ -13,6 +13,7 @@ parameters:
             pod-security.kubernetes.io/enforce: privileged
           name: syn-kubevirt-operator
         replicas: 1
+
       importer:
         enabled: true
         version: v1.58.1
@@ -23,27 +24,29 @@ parameters:
           name: syn-kubevirt-cdi
         replicas: 1
 
-    kubevirt:
-      certificateRotateStrategy: {}
-      configuration: {}
-      customizeComponents: {}
-      imagePullPolicy: IfNotPresent
-      workloadUpdateStrategy: {}
+    config:
+      kubevirt:
+        certificateRotateStrategy: {}
+        configuration: {}
+        customizeComponents: {}
+        imagePullPolicy: IfNotPresent
+        workloadUpdateStrategy: {}
 
-    importer:
-      config:
-        featureGates:
-          - HonorWaitForFirstConsumer
-      imagePullPolicy: IfNotPresent
-      infra:
-        nodeSelector:
-          kubernetes.io/os: linux
-        tolerations:
-          - key: CriticalAddonsOnly
-            operator: Exists
-      workload:
-        nodeSelector:
-          kubernetes.io/os: linux
+      importer:
+        config:
+          featureGates:
+            - HonorWaitForFirstConsumer
+        imagePullPolicy: IfNotPresent
+        infra:
+          nodeSelector:
+            kubernetes.io/os: linux
+          tolerations:
+            - key: CriticalAddonsOnly
+              operator: Exists
+        workload:
+          nodeSelector:
+            kubernetes.io/os: linux
 
-    instanceTypes: {}
-    instancePreferences: {}
+    cluster:
+      types: {}
+      preferences: {}

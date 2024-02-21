@@ -4,7 +4,7 @@ local kube = import 'lib/kube.libjsonnet';
 
 // The hiera parameters for the component
 local inv = kap.inventory();
-local params = inv.parameters.kubevirt_operator;
+local cluster = inv.parameters.kubevirt_operator.cluster;
 
 // Define outputs below
 {
@@ -15,9 +15,9 @@ local params = inv.parameters.kubevirt_operator;
         'app.kubernetes.io/name': name,
       },
     },
-    spec+: params.instanceTypes[name],
+    spec+: cluster.types[name],
   }
-  for name in std.objectFields(params.instanceTypes)
+  for name in std.objectFields(cluster.types)
 } + {
   ['40_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
     metadata+: {
@@ -26,7 +26,7 @@ local params = inv.parameters.kubevirt_operator;
         'app.kubernetes.io/name': name,
       },
     },
-    spec+: params.instancePreferences[name],
+    spec+: cluster.preferences[name],
   }
-  for name in std.objectFields(params.instancePreferences)
+  for name in std.objectFields(cluster.preferences)
 }

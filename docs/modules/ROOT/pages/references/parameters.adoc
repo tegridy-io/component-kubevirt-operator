@@ -3,7 +3,12 @@
 The parent key for all of the following parameters is `kubevirt_operator`.
 
 
-== `kubevirt`
+== `operators`
+
+Enable / Configure operators.
+
+
+=== `kubevirt`
 
 [horizontal]
 type:: dictionary
@@ -12,30 +17,25 @@ default::
 [source,yaml]
 ----
 kubevirt:
-  version: v1.1.1 <1>
-  namespace: <2>
+  enabled: true <1>
+  version: v1.1.1 <2>
+  namespace: <3>
     annotations: {}
     labels:
       kubevirt.io: ''
       pod-security.kubernetes.io/enforce: privileged
     name: syn-kubevirt-operator
-  replicas: 1 <3>
-  spec: <4>
-    certificateRotateStrategy: {}
-    configuration: {}
-    customizeComponents: {}
-    imagePullPolicy: IfNotPresent
-    workloadUpdateStrategy: {}
+  replicas: 1 <4>
 ----
-<1> KubeVirt version.
-<2> Configure KubeVirt namespace.
-<3> Configure KubeVirt operator replicas.
-<4> Define KubeVirt instance.
+<1> Enable KubeVirt operator.
+<2> KubeVirt version.
+<3> Configure KubeVirt namespace.
+<4> Configure KubeVirt operator replicas.
 
-KubeVirt configuration, see https://kubevirt.io/user-guide/operations/customize_components/[KubeVirt Documentation] for specs.
+KubeVirt operator configuration.
 
 
-== `importer`
+=== `importer`
 
 [horizontal]
 type:: dictionary
@@ -44,62 +44,95 @@ default::
 [source,yaml]
 ----
 importer:
-  version: v1.58.1 <1>
-  namespace: <2>
+  enabled: true <1>
+  version: v1.58.1 <2>
+  namespace: <3>
     annotations: {}
     labels:
       cdi.kubevirt.io: ''
     name: syn-kubevirt-cdi
-  replicas: 1 <3>
-  spec: <4>
-    config:
-      featureGates:
-        - HonorWaitForFirstConsumer
-    imagePullPolicy: IfNotPresent
-    infra:
-      nodeSelector:
-        kubernetes.io/os: linux
-      tolerations:
-        - key: CriticalAddonsOnly
-          operator: Exists
-    workload:
-      nodeSelector:
-        kubernetes.io/os: linux
+  replicas: 1 <4>
 ----
-<1> Containerized Data Importer version.
-<2> Configure CDI namespace.
-<3> Configure CDI operator replicas.
-<4> Define CDI instance.
+<1> Enable CDI operator.
+<2> Containerized Data Importer version.
+<3> Configure CDI namespace.
+<4> Configure CDI operator replicas.
+
+Containerized Data Importer operator configuration.
+
+
+== `config`
+
+Configure instances.
+
+
+=== `kubevirt`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+kubevirt:
+  certificateRotateStrategy: {}
+  configuration: {}
+  customizeComponents: {}
+  imagePullPolicy: IfNotPresent
+  workloadUpdateStrategy: {}
+----
+
+See https://kubevirt.io/user-guide/operations/customize_components[KubeVirt Documentation] for specs.
+
+
+=== `importer`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+importer:
+  config:
+    featureGates:
+      - HonorWaitForFirstConsumer
+  imagePullPolicy: IfNotPresent
+  infra:
+    nodeSelector:
+      kubernetes.io/os: linux
+    tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+  workload:
+    nodeSelector:
+      kubernetes.io/os: linux
+----
 
 See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[CDI Documentation] for specs.
 
 
-== `instanceTypes`
+== `cluster`
+
+Cluster scoped VM types and preferences.
+
+
+=== `types`
 
 [horizontal]
 type:: dictionary
-default::
-+
-[source,yaml]
-----
-instanceTypes: {}
-----
+default:: {}
 
 ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
 
 
-== `instancePreferences`
+=== `preferences`
 
 [horizontal]
 type:: dictionary
-default::
-+
-[source,yaml]
-----
-instancePreferences: {}
-----
+default:: {}
 
-ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
+ClusterInstancePreferences configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
 
 
 == Example
@@ -107,10 +140,11 @@ ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_m
 [source,yaml]
 ----
 kubevirt_operator:
-  instanceTypes:
-    small-4:
-      cpu:
-        guest: 2
-      memory:
-        quest: 4Gi
+  cluster:
+    types:
+      small-4:
+        cpu:
+          guest: 2
+        memory:
+          quest: 4Gi
 ----
