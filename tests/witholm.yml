@@ -1,3 +1,50 @@
-# Overwrite parameters here
+parameters:
+  kapitan:
+    dependencies:
+      - type: https
+        source: https://raw.githubusercontent.com/tegridy-io/component-olm/master/lib/olm.libsonnet
+        output_path: vendor/lib/olm.libsonnet
 
-# parameters: {...}
+  olm:
+    namespace:
+      manager:
+        name: my-olm-namespace
+
+  kubevirt_operator:
+    operators:
+      hyperconverged:
+        enabled: true
+
+    config:
+      kubevirt:
+        imagePullPolicy: IfNotPresent
+        infra:
+          nodeSelector:
+            kubernetes.io/os: linux
+          tolerations:
+            - key: CriticalAddonsOnly
+              operator: Exists
+        workload:
+          nodeSelector:
+            kubernetes.io/os: linux
+
+      importer:
+        config:
+          featureGates:
+            - HonorWaitForFirstConsumer
+
+      scale:
+        commonTemplates:
+          namespace: kubevirt-hyperconverged
+        templateValidator:
+          replicas: 2
+
+      network:
+        multus: {}
+        multusDynamicNetworks: {}
+        linuxBridge: {}
+
+      hostpath:
+        storagePools:
+          - name: "local"
+            path: "/var/hpvolumes"

@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  annotations: {}
+  labels:
+    name: kubevirt-operators
+  name: kubevirt-operators
+  namespace: kubevirt-hyperconverged

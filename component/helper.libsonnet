@@ -1,5 +1,8 @@
 local kap = import 'lib/kapitan.libjsonnet';
+local inv = kap.inventory();
+local params = inv.parameters.kubevirt_operator;
 
+// Loading and patching manifests
 local clusterScoped = [
   'ClusterRole',
   'ClusterRoleBinding',
@@ -35,6 +38,15 @@ local patchManifests(path, namespace) = std.map(
   manifests('kubevirt-operator/manifests/' + path)
 );
 
+// Component
+local componentEnabled(component) =
+  if component == 'hyperconverged' then
+    params.operators.hyperconverged.enabled
+  else
+    std.get(params.operators, component, { enabled: false }).enabled
+    && !params.operators.hyperconverged.enabled;
+
 {
   load: patchManifests,
+  isEnabled: componentEnabled,
 }

@@ -1,5 +1,5 @@
-apiVersion: cdi.kubevirt.io/v1beta1
-kind: CDI
+apiVersion: hco.kubevirt.io/v1beta1
+kind: HyperConverged
 metadata:
   annotations: {}
   labels:
@@ -7,8 +7,10 @@ metadata:
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: instance
   name: instance
-  namespace: syn-kubevirt-cdi
+  namespace: kubevirt-hyperconverged
 spec:
+  commonTemplates:
+    namespace: kubevirt-hyperconverged
   config:
     featureGates:
       - HonorWaitForFirstConsumer
@@ -19,6 +21,14 @@ spec:
     tolerations:
       - key: CriticalAddonsOnly
         operator: Exists
+  linuxBridge: {}
+  multus: {}
+  multusDynamicNetworks: {}
+  storagePools:
+    - name: local
+      path: /var/hpvolumes
+  templateValidator:
+    replicas: 2
   workload:
     nodeSelector:
       kubernetes.io/os: linux
