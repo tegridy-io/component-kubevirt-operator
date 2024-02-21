@@ -7,7 +7,7 @@
       "name": "KubeVirt Operator",
       "slug": "kubevirt-operator",
       "parameter_key": "kubevirt_operator",
-      "test_cases": "defaults withtypes",
+      "test_cases": "defaults withtypes witholm",
       "add_lib": "n",
       "add_pp": "n",
       "add_golden": "y",
