@@ -2,32 +2,28 @@ parameters:
   kubevirt_operator:
     =_metadata: {}
 
+    namespace:
+      annotations: {}
+      labels:
+        kubevirt.io: ''
+        pod-security.kubernetes.io/enforce: privileged
+      name: syn-kubevirt-operator
+
+    olm:
+      enabled: false
+      channel: stable
+      resources: {}
+
     operators:
       kubevirt:
         enabled: true
         version: v1.1.1
-        namespace:
-          annotations: {}
-          labels:
-            kubevirt.io: ''
-            pod-security.kubernetes.io/enforce: privileged
-          name: syn-kubevirt-operator
         replicas: 1
 
       importer:
         enabled: true
         version: v1.58.1
-        namespace:
-          annotations: {}
-          labels:
-            cdi.kubevirt.io: ''
-          name: syn-kubevirt-cdi
         replicas: 1
-
-      hyperconverged:
-        enabled: false
-        channel: stable
-        resources: {}
 
     config:
       kubevirt:

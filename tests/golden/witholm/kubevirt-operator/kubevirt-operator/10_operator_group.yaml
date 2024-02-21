@@ -6,6 +6,3 @@ metadata:
     name: kubevirt-operators
   name: kubevirt-operators
   namespace: syn-kubevirt-operator
-spec:
-  targetNamespaces:
-    - syn-kubevirt-operator

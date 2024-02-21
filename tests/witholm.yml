@@ -11,7 +11,5 @@ parameters:
         name: syn-operator-lifecycle-manager
 
   kubevirt_operator:
-    operators:
-      hyperconverged:
-        enabled: true
-        channel: stable
+    olm:
+      enabled: true

@@ -13,18 +13,6 @@ parameters:
         input_type: jsonnet
         output_path: apps/
       - input_paths:
-          - ${_base_directory}/component/importer.jsonnet
+          - ${_base_directory}/component/main.jsonnet
         input_type: jsonnet
-        output_path: kubevirt-operator/importer/
-      - input_paths:
-          - ${_base_directory}/component/kubevirt.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/kubevirt/
-      - input_paths:
-          - ${_base_directory}/component/kubevirt_types.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/kubevirt/
-      - input_paths:
-          - ${_base_directory}/component/hyper.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/hyper/
+        output_path: kubevirt-operator/

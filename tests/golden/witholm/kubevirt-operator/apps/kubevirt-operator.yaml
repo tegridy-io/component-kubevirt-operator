@@ -1,6 +1,4 @@
 spec:
-  source:
-    path: manifests/kubevirt-operator
   syncPolicy:
     syncOptions:
       - ServerSideApply=true
