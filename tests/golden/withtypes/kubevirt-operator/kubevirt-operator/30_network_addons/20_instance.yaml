@@ -1,0 +1,14 @@
+apiVersion: networkaddonsoperator.network.kubevirt.io/v1
+kind: NetworkAddonsConfig
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/instance: instance
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: instance
+  name: instance
+  namespace: syn-kubevirt-cna
+spec:
+  linuxBridge: {}
+  multus: {}
+  multusDynamicNetworks: {}
