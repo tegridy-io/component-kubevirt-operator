@@ -20,7 +20,6 @@ parameters:
             kubevirt.io: ''
             pod-security.kubernetes.io/enforce: privileged
           name: syn-kubevirt-operator
-        replicas: 1
 
       importer:
         enabled: true
@@ -30,9 +29,15 @@ parameters:
           labels:
             cdi.kubevirt.io: ''
           name: syn-kubevirt-cdi
-        replicas: 1
 
-      network: {}
+      network_addons:
+        enabled: true
+        version: v0.91.0
+        namespace:
+          annotations: {}
+          labels: {}
+          name: syn-kubevirt-cna
+
       hostpath: {}
       quota: {}
       scale: {}
@@ -40,7 +45,7 @@ parameters:
     config:
       kubevirt: {}
       importer: {}
-      network: {}
+      network_addons: {}
       hostpath: {}
       quota: {}
       scale: {}

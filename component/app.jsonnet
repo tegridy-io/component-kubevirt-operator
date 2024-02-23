@@ -7,6 +7,18 @@ local helper = import 'helper.libsonnet';
 local app = argocd.App('kubevirt-operator', params.kubevirt.namespace.name);
 
 {
+  [if helper.isEnabled('hyperconverged') then 'kubevirt-hyperconverged']: app {
+    spec+: {
+      source: {
+        path: 'manifests/kubevirt-operator/',
+      },
+      syncPolicy+: {
+        syncOptions+: [
+          'ServerSideApply=true',
+        ],
+      },
+    },
+  },
   [if helper.isEnabled('kubevirt') then 'kubevirt-operator']: app {
     spec+: {
       source: {
@@ -23,6 +35,18 @@ local app = argocd.App('kubevirt-operator', params.kubevirt.namespace.name);
     spec+: {
       source: {
         path: 'manifests/kubevirt-operator/20_importer',
+      },
+      syncPolicy+: {
+        syncOptions+: [
+          'ServerSideApply=true',
+        ],
+      },
+    },
+  },
+  [if helper.isEnabled('network_addons') then 'kubevirt-cna']: app {
+    spec+: {
+      source: {
+        path: 'manifests/kubevirt-operator/30_network_addons',
       },
       syncPolicy+: {
         syncOptions+: [

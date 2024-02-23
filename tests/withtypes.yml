@@ -28,6 +28,11 @@ parameters:
           nodeSelector:
             kubernetes.io/os: linux
 
+      network_addons:
+        multus: {}
+        multusDynamicNetworks: {}
+        linuxBridge: {}
+
     cluster:
       types:
         xsmall:

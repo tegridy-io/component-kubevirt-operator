@@ -7,6 +7,12 @@ parameters:
       - type: https
         source: https://github.com/kubevirt/containerized-data-importer/releases/download/${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
         output_path: ${_base_directory}/manifests/cdi-${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
+      - type: https
+        source: https://github.com/kubevirt/cluster-network-addons-operator/releases/download/${kubevirt_operator:operators:network_addons:version}/operator.yaml
+        output_path: ${_base_directory}/manifests/cna-${kubevirt_operator:operators:network_addons:version}/operator.yaml
+      - type: https
+        source: https://github.com/kubevirt/cluster-network-addons-operator/releases/download/${kubevirt_operator:operators:network_addons:version}/network-addons-config.crd.yaml
+        output_path: ${_base_directory}/manifests/cna-${kubevirt_operator:operators:network_addons:version}/crd.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
@@ -26,5 +32,9 @@ parameters:
         output_path: kubevirt-operator/
       - input_paths:
           - ${_base_directory}/component/hyper.jsonnet
+        input_type: jsonnet
+        output_path: kubevirt-operator/
+      - input_paths:
+          - ${_base_directory}/component/network_addons.jsonnet
         input_type: jsonnet
         output_path: kubevirt-operator/
