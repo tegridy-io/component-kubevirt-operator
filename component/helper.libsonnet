@@ -1,6 +1,26 @@
+// Helper function
+local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.kubevirt_operator;
+
+// OLM
+local deployOlm = params.olm.enabled;
+
+// Config
+local config(component) = if deployOlm then
+  com.makeMergeable(params.config.schedule_scale)
+  + com.makeMergeable(params.config.tenant_quota)
+  + com.makeMergeable(params.config.hostpath_provisioner)
+  + com.makeMergeable(params.config.network_addons)
+  + com.makeMergeable(params.config.data_importer)
+  + com.makeMergeable(params.config.kubevirt)
+else
+  std.get(params.config, component, {});
+
+// Component
+local isEnabled(component) = std.get(params.operators, component, { enabled: false }).enabled;
+local hasConfig(component) = std.length(config(component)) > 0;
 
 // Loading and patching manifests
 local clusterScoped = [
@@ -40,37 +60,45 @@ local patchManifests(path, namespace) = std.map(
 
 // Instances
 local _instanceObj = {
+  olm: {
+    apiVersion: 'hco.kubevirt.io/v1beta1',
+    kind: 'HyperConverged',
+  },
+  kubevirt: {
+    apiVersion: 'kubevirt.io/v1',
+    kind: 'KubeVirt',
+  },
   data_importer: {
     apiVersion: 'cdi.kubevirt.io/v1beta1',
     kind: 'CDI',
+  },
+  network_addons: {
+    apiVersion: 'networkaddonsoperator.network.kubevirt.io/v1',
+    kind: 'NetworkAddonsConfig',
   },
   hostpath_provisioner: {
     apiVersion: 'hostpathprovisioner.kubevirt.io/v1beta1',
     kind: 'HostPathProvisioner',
   },
 };
-local instance(component, namespace, config={}) = _instanceObj[component] {
+local instance(component, namespace) = _instanceObj[component] {
   metadata+: {
     labels: {
       'app.kubernetes.io/managed-by': 'commodore',
       'app.kubernetes.io/name': 'instance',
       'app.kubernetes.io/instance': component,
     },
+    name: 'instance',
     namespace: namespace,
   },
-  spec: if std.length(config) > 0 then config else std.get(params.config, component, {}),
+  spec: config(component),
 };
 
-// Component
-local componentEnabled(component) =
-  if component == 'hyperconverged' then
-    params.operators.hyperconverged.enabled
-  else
-    std.get(params.operators, component, { enabled: false }).enabled
-    && !params.operators.hyperconverged.enabled;
-
+// Define outputs below
 {
   load: patchManifests,
   instance: instance,
-  isEnabled: componentEnabled,
+  isEnabled: isEnabled,
+  hasConfig: hasConfig,
+  deployOlm: deployOlm,
 }

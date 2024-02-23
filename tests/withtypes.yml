@@ -1,5 +1,11 @@
 parameters:
   kubevirt_operator:
+    operators:
+      network_addons:
+        enabled: true
+      hostpath_provisioner:
+        enabled: true
+
     config:
       kubevirt:
         imagePullPolicy: IfNotPresent
@@ -13,7 +19,7 @@ parameters:
           nodeSelector:
             kubernetes.io/os: linux
 
-      importer:
+      data_importer:
         config:
           featureGates:
             - HonorWaitForFirstConsumer
@@ -38,7 +44,17 @@ parameters:
           - name: "local"
             path: "/var/hpvolumes"
 
-    cluster:
+      tenant_quota:
+        additionalMigrationResources:
+          requests.cpu: 500m
+          requests.memory: 512Mi
+
+      schedule_scale:
+        featureGates:
+          deployTektonTaskResources: true
+          deployVmConsoleProxy: true
+
+    vm:
       types:
         xsmall:
           cpu:

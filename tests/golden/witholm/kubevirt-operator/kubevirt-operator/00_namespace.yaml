@@ -3,5 +3,8 @@ kind: Namespace
 metadata:
   annotations: {}
   labels:
+    cdi.kubevirt.io: ''
+    kubevirt.io: ''
     name: kubevirt-hyperconverged
+    pod-security.kubernetes.io/enforce: privileged
   name: kubevirt-hyperconverged

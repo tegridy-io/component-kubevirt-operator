@@ -3,12 +3,7 @@
 The parent key for all of the following parameters is `kubevirt_operator`.
 
 
-== `operators`
-
-Enable / Configure operators.
-
-
-=== `hyperconverged`
+== `namespace`
 
 [horizontal]
 type:: dictionary
@@ -16,18 +11,36 @@ default::
 +
 [source,yaml]
 ----
-hyperconverged:
+namespace:
+  annotations: {} <1>
+  labels: {} <2>
+  name: syn-kubevirt-operator <3>
+----
+<1> Additional annotations.
+<2> Additional labels.
+<3> Namespace name.
+
+Namespace configuraton.
+
+If deploying Hyperconverged Cluster operator the namespace name will be hardcoded to `kubevirt-hyperconverged`.
+
+
+== `olm`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+olm:
   enabled: false <1>
   channel: stable <2>
-  namespace: <3>
-    annotations: {}
-    labels: {}
-  resources: {} <4>
+  resources: {} <3>
 ----
 <1> Enable Hyperconverged operator.
 <2> Hyperconveged olm release channel.
-<3> Configure KubeVirt namespace.
-<4> Configure resources for operator.
+<3> Configure resources for operator.
 
 Hyperconverged cluster operator configuration.
 
@@ -36,6 +49,11 @@ Deploying hyperconverged cluster operator will use OLM to install the operator.
 This operator will manage all other operator contained in this component.
 
 See https://github.com/kubevirt/hyperconverged-cluster-operator[Hyperconverged Cluster Operator Github] for documentation.
+
+
+== `operators`
+
+Enable / Configure operators.
 
 
 === `kubevirt`
@@ -49,21 +67,14 @@ default::
 kubevirt:
   enabled: true <1>
   version: v1.1.1 <2>
-  namespace: <3>
-    annotations: {}
-    labels:
-      kubevirt.io: ''
-      pod-security.kubernetes.io/enforce: privileged
-    name: syn-kubevirt-operator
 ----
 <1> Enable KubeVirt operator.
 <2> KubeVirt version.
-<3> Configure KubeVirt namespace.
 
 KubeVirt operator configuration.
 
 
-=== `importer`
+=== `data_importer`
 
 [horizontal]
 type:: dictionary
@@ -74,15 +85,9 @@ default::
 importer:
   enabled: true <1>
   version: v1.58.1 <2>
-  namespace: <3>
-    annotations: {}
-    labels:
-      cdi.kubevirt.io: ''
-    name: syn-kubevirt-cdi
 ----
 <1> Enable CDI operator.
 <2> Containerized Data Importer version.
-<3> Configure CDI namespace.
 
 Containerized Data Importer operator configuration.
 
@@ -98,16 +103,29 @@ default::
 network_addons:
   enabled: true <1>
   version: v0.91.0 <2>
-  namespace: <3>
-    annotations: {}
-    labels: {}
-    name: syn-kubevirt-cna
 ----
 <1> Enable CNA operator.
 <2> Cluster Network Addons version.
-<3> Configure CNA namespace.
 
 Cluster Network Addons operator configuration.
+
+
+=== `hostpath_provisioner`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+network_addons:
+  enabled: true <1>
+  version: v0.18.0 <2>
+----
+<1> Enable Hostpath Provisioner perator.
+<2> Cluster Network Addons version.
+
+Hostpath Provisioner operator configuration.
 
 
 == `config`
@@ -122,21 +140,28 @@ type:: dictionary
 default:: See https://kubevirt.io/user-guide/operations/customize_components[KubeVirt Documentation].
 
 
-=== `importer`
+=== `data_importer`
 
 [horizontal]
 type:: dictionary
-default:: See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[CDI Documentation].
+default:: See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[Containerized Data Importer Documentation].
 
 
 === `network_addons`
 
 [horizontal]
 type:: dictionary
-default:: See https://github.com/kubevirt/cluster-network-addons-operator[CNA Documentation].
+default:: See https://github.com/kubevirt/cluster-network-addons-operator[Cluster Network Addons Documentation].
 
 
-== `cluster`
+=== `hostpath_provisioner`
+
+[horizontal]
+type:: dictionary
+default:: See https://github.com/kubevirt/hostpath-provisioner-operator[Hostpath Provisioner Documentation].
+
+
+== `vm`
 
 Cluster scoped VM types and preferences.
 

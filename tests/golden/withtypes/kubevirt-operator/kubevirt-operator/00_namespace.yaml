@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   annotations: {}
   labels:
+    cdi.kubevirt.io: ''
     kubevirt.io: ''
     name: syn-kubevirt-operator
     pod-security.kubernetes.io/enforce: privileged

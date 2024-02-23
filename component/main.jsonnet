@@ -2,6 +2,7 @@
 local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
+local olm = import 'lib/olm.libsonnet';
 
 local helper = import 'helper.libsonnet';
 
@@ -11,26 +12,106 @@ local params = inv.parameters.kubevirt_operator;
 local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 
 // Namespace
-// local namespace = kube.Namespace(params.namespace.name) {
-//   metadata+: {
-//     annotations+: params.namespace.annotations,
-//     labels+: {
-//       // Configure the namespaces so that the OCP4 cluster-monitoring
-//       // Prometheus can find the servicemonitors and rules.
-//       [if isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
-//     } + com.makeMergeable(params.namespace.labels),
-//   },
-// };
+local namespaceName = if helper.deployOlm then 'kubevirt-hyperconverged'
+else params.namespace.name;
 
-// Instance
+local namespace = kube.Namespace(namespaceName) {
+  metadata+: {
+    annotations+: params.namespace.annotations,
+    labels+: {
+      'kubevirt.io': '',
+      'cdi.kubevirt.io': '',
+      'pod-security.kubernetes.io/enforce': 'privileged',
+      // Configure the namespaces so that the OCP4 cluster-monitoring
+      // Prometheus can find the servicemonitors and rules.
+      [if isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
+    } + com.makeMergeable(params.namespace.labels),
+  },
+};
+
+// OLM
+local packageName = if isOpenshift then 'kubevirt-hyperconverged' else 'community-kubevirt-hyperconverged';
+local catalog = if isOpenshift then 'redhat-operators' else 'operatorhubio-catalog';
+
+local operator_group = olm.OperatorGroup('kubevirt-operators') {
+  metadata+: {
+    namespace: 'kubevirt-hyperconverged',
+  },
+};
+
+local subscription = olm.namespacedSubscription(
+  'kubevirt-hyperconverged',
+  packageName,
+  params.olm.channel,
+  catalog,
+) {
+  spec+: {
+    config+: {
+      resources: params.olm.resources,
+    },
+  },
+};
+
+// Bundles
+local bundle_kubevirt = helper.load('kubevirt-%s/operator.yaml' % params.operators.kubevirt.version, namespaceName);
+local bundle_importer = helper.load('cdi-%s/operator.yaml' % params.operators.data_importer.version, namespaceName);
+local bundle_network = helper.load('cna-%s/crd.yaml' % params.operators.network_addons.version, namespaceName)
+                       + helper.load('cna-%s/operator.yaml' % params.operators.network_addons.version, namespaceName);
+local bundle_hostpath = helper.load('hpp-%s/operator.yaml' % params.operators.hostpath_provisioner.version, namespaceName);
+
+// Instances
+local instance_olm = helper.instance('olm', namespaceName);
+
+local instance_kubevirt = helper.instance('kubevirt', namespaceName);
+local instance_importer = helper.instance('data_importer', namespaceName);
+local instance_network = helper.instance('network_addons', namespaceName);
+local instance_hostpath = helper.instance('hostpath_provisioner', namespaceName);
+
+// Instances
+local vm_types = {
+  ['30_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
+    metadata+: {
+      labels+: {
+        'app.kubernetes.io/managed-by': 'commodore',
+        'app.kubernetes.io/name': name,
+      },
+    },
+    spec+: params.vm.types[name],
+  }
+  for name in std.objectFields(params.vm.types)
+};
+
+// Preferences
+local vm_preferences = {
+  ['40_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
+    metadata+: {
+      labels+: {
+        'app.kubernetes.io/managed-by': 'commodore',
+        'app.kubernetes.io/name': name,
+      },
+    },
+    spec+: params.vm.preferences[name],
+  }
+  for name in std.objectFields(params.vm.preferences)
+};
 
 // Define outputs below
 {
-  [if helper.isEnabled('hostpath_provisioner') then '40_hostpath_provisioner/10_bundle']: helper.load('hpp-%s/operator.yaml' % params.operators.hostpath_provisioner.version, params.operators.hostpath_provisioner.namespace.name),
-  [if std.length(params.config.hostpath_provisioner) > 0 then '40_hostpath_provisioner/20_instance']: helper.instance('hostpath_provisioner', params.operators.hostpath_provisioner.namespace.name),
+  '00_namespace': namespace,
 }
-// if helper.isEnabled('importer') then {
-//   '20_importer/00_namespace': namespace,
-//   '20_importer/10_bundle': helper.load('cdi-%s/cdi-operator.yaml' % operator.version, operator.namespace.name),
-//   [if std.length(config) > 0 then '20_importer/20_instance']: instance,
-// } else {}
++ if helper.deployOlm then {
+  '10_operator_group': operator_group,
+  '10_subscription': subscription,
+  [if helper.hasConfig('olm') then '20_instance']: instance_olm,
+} else {
+         [if helper.isEnabled('kubevirt') then '10_bundle_kubevirt']: bundle_kubevirt,
+         [if helper.isEnabled('data_importer') then '10_bundle_importer']: bundle_importer,
+         [if helper.isEnabled('network_addons') then '10_bundle_network']: bundle_network,
+         [if helper.isEnabled('hostpath_provisioner') then '10_bundle_hostpath']: bundle_hostpath,
+         [if helper.hasConfig('kubevirt') then '20_instance_kubevirt']: instance_kubevirt,
+         [if helper.hasConfig('data_importer') then '20_instance_importer']: instance_importer,
+         [if helper.hasConfig('network_addons') then '20_instance_network']: instance_network,
+         [if helper.hasConfig('hostpath_provisioner') then '20_instance_hostpath']: instance_hostpath,
+       }
+       + vm_types
+       + vm_preferences
