@@ -3,6 +3,14 @@ parameters:
     =_metadata: {}
 
     operators:
+      hyperconverged:
+        enabled: false
+        channel: stable
+        namespace:
+          annotations: {}
+          labels: {}
+        resources: {}
+
       kubevirt:
         enabled: true
         version: v1.1.1
@@ -24,28 +32,19 @@ parameters:
           name: syn-kubevirt-cdi
         replicas: 1
 
-    config:
-      kubevirt:
-        certificateRotateStrategy: {}
-        configuration: {}
-        customizeComponents: {}
-        imagePullPolicy: IfNotPresent
-        workloadUpdateStrategy: {}
+      network: {}
+      hostpath: {}
+      quota: {}
+      scale: {}
 
-      importer:
-        config:
-          featureGates:
-            - HonorWaitForFirstConsumer
-        imagePullPolicy: IfNotPresent
-        infra:
-          nodeSelector:
-            kubernetes.io/os: linux
-          tolerations:
-            - key: CriticalAddonsOnly
-              operator: Exists
-        workload:
-          nodeSelector:
-            kubernetes.io/os: linux
+    config:
+      kubevirt: {}
+      importer: {}
+      network: {}
+      hostpath: {}
+      quota: {}
+      scale: {}
+
 
     cluster:
       types: {}

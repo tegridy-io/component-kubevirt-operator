@@ -9,8 +9,13 @@ metadata:
   name: instance
   namespace: syn-kubevirt-operator
 spec:
-  certificateRotateStrategy: {}
-  configuration: {}
-  customizeComponents: {}
   imagePullPolicy: IfNotPresent
-  workloadUpdateStrategy: {}
+  infra:
+    nodeSelector:
+      kubernetes.io/os: linux
+    tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+  workload:
+    nodeSelector:
+      kubernetes.io/os: linux

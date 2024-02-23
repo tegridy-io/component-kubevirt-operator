@@ -8,6 +8,36 @@ The parent key for all of the following parameters is `kubevirt_operator`.
 Enable / Configure operators.
 
 
+=== `hyperconverged`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+hyperconverged:
+  enabled: false <1>
+  channel: stable <2>
+  namespace: <3>
+    annotations: {}
+    labels: {}
+  resources: {} <4>
+----
+<1> Enable Hyperconverged operator.
+<2> Hyperconveged olm release channel.
+<3> Configure KubeVirt namespace.
+<4> Configure resources for operator.
+
+Hyperconverged cluster operator configuration.
+
+Deploying hyperconverged cluster operator will use OLM to install the operator.
+
+This operator will manage all other operator contained in this component.
+
+See https://github.com/kubevirt/hyperconverged-cluster-operator[Hyperconverged Cluster Operator Github] for documentation.
+
+
 === `kubevirt`
 
 [horizontal]
@@ -70,46 +100,14 @@ Configure instances.
 
 [horizontal]
 type:: dictionary
-default::
-+
-[source,yaml]
-----
-kubevirt:
-  certificateRotateStrategy: {}
-  configuration: {}
-  customizeComponents: {}
-  imagePullPolicy: IfNotPresent
-  workloadUpdateStrategy: {}
-----
-
-See https://kubevirt.io/user-guide/operations/customize_components[KubeVirt Documentation] for specs.
+default:: See https://kubevirt.io/user-guide/operations/customize_components[KubeVirt Documentation].
 
 
 === `importer`
 
 [horizontal]
 type:: dictionary
-default::
-+
-[source,yaml]
-----
-importer:
-  config:
-    featureGates:
-      - HonorWaitForFirstConsumer
-  imagePullPolicy: IfNotPresent
-  infra:
-    nodeSelector:
-      kubernetes.io/os: linux
-    tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
-  workload:
-    nodeSelector:
-      kubernetes.io/os: linux
-----
-
-See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[CDI Documentation] for specs.
+default:: See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[CDI Documentation].
 
 
 == `cluster`
@@ -140,6 +138,34 @@ ClusterInstancePreferences configuration, see https://kubevirt.io/user-guide/vir
 [source,yaml]
 ----
 kubevirt_operator:
+  config:
+    kubevirt:
+      imagePullPolicy: IfNotPresent
+      infra:
+        nodeSelector:
+          kubernetes.io/os: linux
+        tolerations:
+          - key: CriticalAddonsOnly
+            operator: Exists
+      workload:
+        nodeSelector:
+          kubernetes.io/os: linux
+
+    importer:
+      config:
+        featureGates:
+          - HonorWaitForFirstConsumer
+      imagePullPolicy: IfNotPresent
+      infra:
+        nodeSelector:
+          kubernetes.io/os: linux
+        tolerations:
+          - key: CriticalAddonsOnly
+            operator: Exists
+      workload:
+        nodeSelector:
+          kubernetes.io/os: linux
+
   cluster:
     types:
       small-4:

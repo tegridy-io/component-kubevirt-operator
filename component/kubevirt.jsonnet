@@ -37,9 +37,8 @@ local instance = kube._Object('kubevirt.io/v1', 'KubeVirt', 'instance') {
 };
 
 // Define outputs below
-if operator.enabled then
-  {
-    '00_namespace': namespace,
-    '10_bundle': helper.load('kubevirt-%s/kubevirt-operator.yaml' % operator.version, operator.namespace.name),
-    '20_instance': instance,
-  }
+if helper.isEnabled('kubevirt') then {
+  '10_kubevirt/00_namespace': namespace,
+  '10_kubevirt/10_bundle': helper.load('kubevirt-%s/kubevirt-operator.yaml' % operator.version, operator.namespace.name),
+  [if std.length(config) > 0 then '10_kubevirt/20_instance']: instance,
+} else {}

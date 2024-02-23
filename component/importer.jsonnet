@@ -23,18 +23,6 @@ local namespace = kube.Namespace(operator.namespace.name) {
   },
 };
 
-// Namespace
-local namespace = kube.Namespace(operator.namespace.name) {
-  metadata+: {
-    annotations+: operator.namespace.annotations,
-    labels+: {
-      // Configure the namespaces so that the OCP4 cluster-monitoring
-      // Prometheus can find the servicemonitors and rules.
-      [if isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
-    } + com.makeMergeable(operator.namespace.labels),
-  },
-};
-
 // Instance
 local instance = kube._Object('cdi.kubevirt.io/v1beta1', 'CDI', 'instance') {
   metadata+: {
@@ -49,9 +37,8 @@ local instance = kube._Object('cdi.kubevirt.io/v1beta1', 'CDI', 'instance') {
 };
 
 // Define outputs below
-if operator.enabled then
-  {
-    '00_namespace': namespace,
-    '10_bundle': helper.load('cdi-%s/cdi-operator.yaml' % operator.version, operator.namespace.name),
-    '20_instance': instance,
-  }
+if helper.isEnabled('importer') then {
+  '20_importer/00_namespace': namespace,
+  '20_importer/10_bundle': helper.load('cdi-%s/cdi-operator.yaml' % operator.version, operator.namespace.name),
+  [if std.length(config) > 0 then '20_importer/20_instance']: instance,
+} else {}
