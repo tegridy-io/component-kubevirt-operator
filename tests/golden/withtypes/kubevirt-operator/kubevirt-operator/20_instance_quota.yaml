@@ -1,0 +1,13 @@
+apiVersion: mtq.kubevirt.io/v1alpha1
+kind: MTQ
+metadata:
+  labels:
+    app.kubernetes.io/instance: tenant_quota
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: instance
+  name: instance
+  namespace: syn-kubevirt-operator
+spec:
+  additionalMigrationResources:
+    requests.cpu: 500m
+    requests.memory: 512Mi

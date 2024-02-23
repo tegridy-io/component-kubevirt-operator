@@ -86,6 +86,10 @@ local _instanceObj = {
     apiVersion: 'ssp.kubevirt.io/v1beta2',
     kind: 'SSP',
   },
+  tenant_quota: {
+    apiVersion: 'mtq.kubevirt.io/v1alpha1',
+    kind: 'MTQ',
+  },
 };
 local instance(component, namespace) = _instanceObj[component] {
   metadata+: {

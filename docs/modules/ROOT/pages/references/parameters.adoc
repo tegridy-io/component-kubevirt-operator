@@ -146,6 +146,24 @@ schedule_scale:
 Scheduling, Scale and Performance operator configuration.
 
 
+=== `teanant_quota`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+tenant_quota:
+  enabled: false <1>
+  version: v1.2.0 <2>
+----
+<1> Enable Managed Tenant Quota operator.
+<2> Managed Tenant Quota operator version.
+
+Managed Tenant Quota operator configuration.
+
+
 == `config`
 
 Configure instances.
@@ -184,6 +202,13 @@ default:: See https://github.com/kubevirt/hostpath-provisioner-operator[Hostpath
 [horizontal]
 type:: dictionary
 default:: See https://github.com/kubevirt/ssp-operator/blob/main/docs/configuration.md[Scheduling, Scale and Performance Documentation].
+
+
+=== `teanant_quota`
+
+[horizontal]
+type:: dictionary
+default:: See https://github.com/kubevirt/managed-tenant-quota[Managed Tenant Quota Documentation].
 
 
 == `vm`
