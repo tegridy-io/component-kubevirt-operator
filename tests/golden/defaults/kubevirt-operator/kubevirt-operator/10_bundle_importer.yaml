@@ -4881,7 +4881,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: cdi-operator
-    namespace: syn-kubevirt-cdi
+    namespace: syn-kubevirt-operator
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -4890,7 +4890,7 @@ metadata:
     app.kubernetes.io/managed-by: commodore
     operator.cdi.kubevirt.io: ''
   name: cdi-operator
-  namespace: syn-kubevirt-cdi
+  namespace: syn-kubevirt-operator
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -4900,7 +4900,7 @@ metadata:
     app.kubernetes.io/managed-by: commodore
     cdi.kubevirt.io: ''
   name: cdi-operator
-  namespace: syn-kubevirt-cdi
+  namespace: syn-kubevirt-operator
 rules:
   - apiGroups:
       - rbac.authorization.k8s.io
@@ -5080,7 +5080,7 @@ metadata:
     app.kubernetes.io/managed-by: commodore
     cdi.kubevirt.io: ''
   name: cdi-operator
-  namespace: syn-kubevirt-cdi
+  namespace: syn-kubevirt-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -5088,7 +5088,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: cdi-operator
-    namespace: syn-kubevirt-cdi
+    namespace: syn-kubevirt-operator
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -5099,7 +5099,7 @@ metadata:
     operator.cdi.kubevirt.io: ''
     prometheus.cdi.kubevirt.io: 'true'
   name: cdi-operator
-  namespace: syn-kubevirt-cdi
+  namespace: syn-kubevirt-operator
 spec:
   replicas: 1
   selector:

@@ -2,63 +2,45 @@ parameters:
   kubevirt_operator:
     =_metadata: {}
 
-    operators:
-      hyperconverged:
-        enabled: false
-        channel: stable
-        namespace:
-          annotations: {}
-          labels: {}
-        resources: {}
+    namespace:
+      annotations: {}
+      labels: {}
+      name: syn-kubevirt-operator
 
+    olm:
+      enabled: false
+      channel: stable
+      resources: {}
+
+    operators:
       kubevirt:
         enabled: true
         version: v1.1.1
-        namespace:
-          annotations: {}
-          labels:
-            kubevirt.io: ''
-            pod-security.kubernetes.io/enforce: privileged
-          name: syn-kubevirt-operator
 
-      importer:
+      data_importer:
         enabled: true
         version: v1.58.1
-        namespace:
-          annotations: {}
-          labels:
-            cdi.kubevirt.io: ''
-          name: syn-kubevirt-cdi
 
       network_addons:
-        enabled: true
+        enabled: false
         version: v0.91.0
-        namespace:
-          annotations: {}
-          labels: {}
-          name: syn-kubevirt-cna
 
       hostpath_provisioner:
-        enabled: true
+        enabled: false
         version: v0.18.0
-        namespace:
-          annotations: {}
-          labels: {}
-          name: syn-kubevirt-hostpath
 
-      hostpath: {}
-      quota: {}
-      scale: {}
+      tenant_quota: {}
+      schedule_scale: {}
 
     config:
       kubevirt: {}
-      importer: {}
+      data_importer: {}
       network_addons: {}
       hostpath_provisioner: {}
       quota: {}
       scale: {}
 
 
-    cluster:
+    vm:
       types: {}
       preferences: {}

@@ -1,19 +1,22 @@
 apiVersion: hco.kubevirt.io/v1beta1
 kind: HyperConverged
 metadata:
-  annotations: {}
   labels:
-    app.kubernetes.io/instance: instance
+    app.kubernetes.io/instance: olm
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: instance
   name: instance
   namespace: kubevirt-hyperconverged
 spec:
-  commonTemplates:
-    namespace: kubevirt-hyperconverged
+  additionalMigrationResources:
+    requests.cpu: 500m
+    requests.memory: 512Mi
   config:
     featureGates:
       - HonorWaitForFirstConsumer
+  featureGates:
+    deployTektonTaskResources: true
+    deployVmConsoleProxy: true
   imagePullPolicy: IfNotPresent
   infra:
     nodeSelector:
@@ -27,8 +30,6 @@ spec:
   storagePools:
     - name: local
       path: /var/hpvolumes
-  templateValidator:
-    replicas: 2
   workload:
     nodeSelector:
       kubernetes.io/os: linux

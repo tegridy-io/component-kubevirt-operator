@@ -11,9 +11,8 @@ parameters:
         name: my-olm-namespace
 
   kubevirt_operator:
-    operators:
-      hyperconverged:
-        enabled: true
+    olm:
+      enabled: true
 
     config:
       kubevirt:
@@ -28,23 +27,34 @@ parameters:
           nodeSelector:
             kubernetes.io/os: linux
 
-      importer:
+      data_importer:
         config:
           featureGates:
             - HonorWaitForFirstConsumer
+        imagePullPolicy: IfNotPresent
+        infra:
+          nodeSelector:
+            kubernetes.io/os: linux
+        workload:
+          nodeSelector:
+            kubernetes.io/os: linux
 
-      scale:
-        commonTemplates:
-          namespace: kubevirt-hyperconverged
-        templateValidator:
-          replicas: 2
-
-      network:
+      network_addons:
         multus: {}
         multusDynamicNetworks: {}
         linuxBridge: {}
 
-      hostpath:
+      hostpath_provisioner:
         storagePools:
           - name: "local"
             path: "/var/hpvolumes"
+
+      tenant_quota:
+        additionalMigrationResources:
+          requests.cpu: 500m
+          requests.memory: 512Mi
+
+      schedule_scale:
+        featureGates:
+          deployTektonTaskResources: true
+          deployVmConsoleProxy: true

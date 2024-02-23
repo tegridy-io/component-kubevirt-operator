@@ -5,7 +5,8 @@ metadata:
     app.kubernetes.io/instance: hostpath_provisioner
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: instance
-  namespace: syn-kubevirt-hostpath
+  name: instance
+  namespace: syn-kubevirt-operator
 spec:
   storagePools:
     - name: local

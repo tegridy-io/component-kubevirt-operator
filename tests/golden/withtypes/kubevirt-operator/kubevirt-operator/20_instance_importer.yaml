@@ -1,13 +1,12 @@
 apiVersion: cdi.kubevirt.io/v1beta1
 kind: CDI
 metadata:
-  annotations: {}
   labels:
-    app.kubernetes.io/instance: instance
+    app.kubernetes.io/instance: data_importer
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: instance
   name: instance
-  namespace: syn-kubevirt-cdi
+  namespace: syn-kubevirt-operator
 spec:
   config:
     featureGates:

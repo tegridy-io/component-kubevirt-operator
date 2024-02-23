@@ -1,9 +1,8 @@
 apiVersion: kubevirt.io/v1
 kind: KubeVirt
 metadata:
-  annotations: {}
   labels:
-    app.kubernetes.io/instance: instance
+    app.kubernetes.io/instance: kubevirt
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: instance
   name: instance

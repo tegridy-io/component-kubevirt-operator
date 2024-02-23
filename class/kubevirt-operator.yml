@@ -4,11 +4,11 @@ parameters:
       # --- kubevirt
       - type: https
         source: https://github.com/kubevirt/kubevirt/releases/download/${kubevirt_operator:operators:kubevirt:version}/kubevirt-operator.yaml
-        output_path: ${_base_directory}/manifests/kubevirt-${kubevirt_operator:operators:kubevirt:version}/kubevirt-operator.yaml
+        output_path: ${_base_directory}/manifests/kubevirt-${kubevirt_operator:operators:kubevirt:version}/operator.yaml
       # --- containerized data importer
       - type: https
-        source: https://github.com/kubevirt/containerized-data-importer/releases/download/${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
-        output_path: ${_base_directory}/manifests/cdi-${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
+        source: https://github.com/kubevirt/containerized-data-importer/releases/download/${kubevirt_operator:operators:data_importer:version}/cdi-operator.yaml
+        output_path: ${_base_directory}/manifests/cdi-${kubevirt_operator:operators:data_importer:version}/operator.yaml
       # --- cluster network addons
       - type: https
         source: https://github.com/kubevirt/cluster-network-addons-operator/releases/download/${kubevirt_operator:operators:network_addons:version}/operator.yaml
@@ -27,25 +27,5 @@ parameters:
         output_path: apps/
       - input_paths:
           - ${_base_directory}/component/main.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/
-      - input_paths:
-          - ${_base_directory}/component/importer.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/
-      - input_paths:
-          - ${_base_directory}/component/kubevirt.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/
-      - input_paths:
-          - ${_base_directory}/component/kubevirt_types.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/
-      - input_paths:
-          - ${_base_directory}/component/hyper.jsonnet
-        input_type: jsonnet
-        output_path: kubevirt-operator/
-      - input_paths:
-          - ${_base_directory}/component/network_addons.jsonnet
         input_type: jsonnet
         output_path: kubevirt-operator/
