@@ -55,4 +55,16 @@ local app = argocd.App('kubevirt-operator', params.kubevirt.namespace.name);
       },
     },
   },
+  [if helper.isEnabled('hostpath_provisioner') then 'kubevirt-hpp']: app {
+    spec+: {
+      source: {
+        path: 'manifests/kubevirt-operator/40_hostpath_provisioner',
+      },
+      syncPolicy+: {
+        syncOptions+: [
+          'ServerSideApply=true',
+        ],
+      },
+    },
+  },
 }

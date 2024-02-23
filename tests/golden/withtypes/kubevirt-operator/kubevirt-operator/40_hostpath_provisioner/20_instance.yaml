@@ -1,0 +1,12 @@
+apiVersion: hostpathprovisioner.kubevirt.io/v1beta1
+kind: HostPathProvisioner
+metadata:
+  labels:
+    app.kubernetes.io/instance: hostpath_provisioner
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: instance
+  namespace: syn-kubevirt-hostpath
+spec:
+  storagePools:
+    - name: local
+      path: /var/hpvolumes

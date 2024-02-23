@@ -1,0 +1,6 @@
+spec:
+  source:
+    path: manifests/kubevirt-operator/40_hostpath_provisioner
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
