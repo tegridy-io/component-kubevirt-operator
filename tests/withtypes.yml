@@ -7,6 +7,8 @@ parameters:
         enabled: true
       schedule_scale:
         enabled: true
+      tenant_quota:
+        enabled: true
 
     config:
       kubevirt:
