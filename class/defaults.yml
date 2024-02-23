@@ -29,8 +29,11 @@ parameters:
         enabled: false
         version: v0.18.0
 
+      schedule_scale:
+        enabled: false
+        version: v0.19.0
+
       tenant_quota: {}
-      schedule_scale: {}
 
     config:
       kubevirt: {}

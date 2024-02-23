@@ -128,6 +128,24 @@ network_addons:
 Hostpath Provisioner operator configuration.
 
 
+=== `schedule_scale`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+schedule_scale:
+  enabled: true <1>
+  version: v0.19.0 <2>
+----
+<1> Enable Scheduling, Scale and Performance operator.
+<2> Scheduling, Scale and Performance operator version.
+
+Scheduling, Scale and Performance operator configuration.
+
+
 == `config`
 
 Configure instances.
@@ -159,6 +177,13 @@ default:: See https://github.com/kubevirt/cluster-network-addons-operator[Cluste
 [horizontal]
 type:: dictionary
 default:: See https://github.com/kubevirt/hostpath-provisioner-operator[Hostpath Provisioner Documentation].
+
+
+=== `schedule_scale`
+
+[horizontal]
+type:: dictionary
+default:: See https://github.com/kubevirt/ssp-operator/blob/main/docs/configuration.md[Scheduling, Scale and Performance Documentation].
 
 
 == `vm`

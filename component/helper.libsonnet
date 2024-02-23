@@ -27,8 +27,10 @@ local clusterScoped = [
   'ClusterRole',
   'ClusterRoleBinding',
   'CustomResourceDefinition',
+  'MutatingWebhookConfiguration',
   'Namespace',
   'PriorityClass',
+  'ValidatingWebhookConfiguration',
 ];
 local bindings = [
   'ClusterRoleBinding',
@@ -79,6 +81,10 @@ local _instanceObj = {
   hostpath_provisioner: {
     apiVersion: 'hostpathprovisioner.kubevirt.io/v1beta1',
     kind: 'HostPathProvisioner',
+  },
+  schedule_scale: {
+    apiVersion: 'ssp.kubevirt.io/v1beta2',
+    kind: 'SSP',
   },
 };
 local instance(component, namespace) = _instanceObj[component] {

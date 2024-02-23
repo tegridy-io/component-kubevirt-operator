@@ -1,0 +1,13 @@
+apiVersion: ssp.kubevirt.io/v1beta2
+kind: SSP
+metadata:
+  labels:
+    app.kubernetes.io/instance: schedule_scale
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: instance
+  name: instance
+  namespace: syn-kubevirt-operator
+spec:
+  featureGates:
+    deployTektonTaskResources: true
+    deployVmConsoleProxy: true
