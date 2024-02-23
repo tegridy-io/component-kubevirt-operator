@@ -33,6 +33,11 @@ parameters:
         multusDynamicNetworks: {}
         linuxBridge: {}
 
+      hostpath_provisioner:
+        storagePools:
+          - name: "local"
+            path: "/var/hpvolumes"
+
     cluster:
       types:
         xsmall:

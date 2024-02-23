@@ -38,6 +38,29 @@ local patchManifests(path, namespace) = std.map(
   manifests('kubevirt-operator/manifests/' + path)
 );
 
+// Instances
+local _instanceObj = {
+  data_importer: {
+    apiVersion: 'cdi.kubevirt.io/v1beta1',
+    kind: 'CDI',
+  },
+  hostpath_provisioner: {
+    apiVersion: 'hostpathprovisioner.kubevirt.io/v1beta1',
+    kind: 'HostPathProvisioner',
+  },
+};
+local instance(component, namespace, config={}) = _instanceObj[component] {
+  metadata+: {
+    labels: {
+      'app.kubernetes.io/managed-by': 'commodore',
+      'app.kubernetes.io/name': 'instance',
+      'app.kubernetes.io/instance': component,
+    },
+    namespace: namespace,
+  },
+  spec: if std.length(config) > 0 then config else std.get(params.config, component, {}),
+};
+
 // Component
 local componentEnabled(component) =
   if component == 'hyperconverged' then
@@ -48,5 +71,6 @@ local componentEnabled(component) =
 
 {
   load: patchManifests,
+  instance: instance,
   isEnabled: componentEnabled,
 }

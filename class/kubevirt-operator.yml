@@ -1,23 +1,34 @@
 parameters:
   kapitan:
     dependencies:
+      # --- kubevirt
       - type: https
         source: https://github.com/kubevirt/kubevirt/releases/download/${kubevirt_operator:operators:kubevirt:version}/kubevirt-operator.yaml
         output_path: ${_base_directory}/manifests/kubevirt-${kubevirt_operator:operators:kubevirt:version}/kubevirt-operator.yaml
+      # --- containerized data importer
       - type: https
         source: https://github.com/kubevirt/containerized-data-importer/releases/download/${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
         output_path: ${_base_directory}/manifests/cdi-${kubevirt_operator:operators:importer:version}/cdi-operator.yaml
+      # --- cluster network addons
       - type: https
         source: https://github.com/kubevirt/cluster-network-addons-operator/releases/download/${kubevirt_operator:operators:network_addons:version}/operator.yaml
         output_path: ${_base_directory}/manifests/cna-${kubevirt_operator:operators:network_addons:version}/operator.yaml
       - type: https
         source: https://github.com/kubevirt/cluster-network-addons-operator/releases/download/${kubevirt_operator:operators:network_addons:version}/network-addons-config.crd.yaml
         output_path: ${_base_directory}/manifests/cna-${kubevirt_operator:operators:network_addons:version}/crd.yaml
+      # --- hostpath provisioner
+      - type: https
+        source: https://github.com/kubevirt/hostpath-provisioner-operator/releases/download/${kubevirt_operator:operators:hostpath_provisioner:version}/operator.yaml
+        output_path: ${_base_directory}/manifests/hpp-${kubevirt_operator:operators:hostpath_provisioner:version}/operator.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
         input_type: jsonnet
         output_path: apps/
+      - input_paths:
+          - ${_base_directory}/component/main.jsonnet
+        input_type: jsonnet
+        output_path: kubevirt-operator/
       - input_paths:
           - ${_base_directory}/component/importer.jsonnet
         input_type: jsonnet
