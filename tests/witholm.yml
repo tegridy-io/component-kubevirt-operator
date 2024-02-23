@@ -49,12 +49,12 @@ parameters:
           - name: "local"
             path: "/var/hpvolumes"
 
-      tenant_quota:
-        additionalMigrationResources:
-          requests.cpu: 500m
-          requests.memory: 512Mi
-
       schedule_scale:
         featureGates:
           deployTektonTaskResources: true
           deployVmConsoleProxy: true
+
+      tenant_quota:
+        additionalMigrationResources:
+          requests.cpu: 500m
+          requests.memory: 512Mi

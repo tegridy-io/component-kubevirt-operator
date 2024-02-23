@@ -20,6 +20,10 @@ parameters:
       - type: https
         source: https://github.com/kubevirt/hostpath-provisioner-operator/releases/download/${kubevirt_operator:operators:hostpath_provisioner:version}/operator.yaml
         output_path: ${_base_directory}/manifests/hpp-${kubevirt_operator:operators:hostpath_provisioner:version}/operator.yaml
+      # --- scheduling, scale and performance operator
+      - type: https
+        source: https://github.com/kubevirt/ssp-operator/releases/download/${kubevirt_operator:operators:schedule_scale:version}/ssp-operator.yaml
+        output_path: ${_base_directory}/manifests/ssp-${kubevirt_operator:operators:schedule_scale:version}/operator.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
