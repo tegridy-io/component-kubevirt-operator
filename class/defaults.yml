@@ -2,6 +2,12 @@ parameters:
   kubevirt_operator:
     =_metadata: {}
 
+    images:
+      dashboard:
+        registry: docker.io
+        repository: kubevirtmanager/kubevirt-manager
+        tag: 1.3.2
+
     namespace:
       annotations: {}
       labels: {}
@@ -41,7 +47,6 @@ parameters:
 
     dashboard:
       enabled: false
-      version: main
       namespace:
         annotations: {}
         labels: {}

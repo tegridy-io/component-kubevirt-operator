@@ -31,7 +31,7 @@ parameters:
       # --- kubevirt manager
       - type: https
         source: https://raw.githubusercontent.com/kubevirt-manager/kubevirt-manager/main/kubernetes/bundled.yaml
-        output_path: ${_base_directory}/manifests/dashboard-${kubevirt_operator:dashboard:version}/bundled.yaml
+        output_path: ${_base_directory}/manifests/dashboard-main/bundled.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
@@ -39,5 +39,9 @@ parameters:
         output_path: apps/
       - input_paths:
           - ${_base_directory}/component/main.jsonnet
+        input_type: jsonnet
+        output_path: kubevirt-operator/
+      - input_paths:
+          - ${_base_directory}/component/dashboard.jsonnet
         input_type: jsonnet
         output_path: kubevirt-operator/

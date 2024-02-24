@@ -278,7 +278,7 @@ spec:
         kubevirt-manager.io/version: 1.3.2
     spec:
       containers:
-        - image: kubevirtmanager/kubevirt-manager:1.3.2
+        - image: docker.io/kubevirtmanager/kubevirt-manager:1.3.2
           imagePullPolicy: IfNotPresent
           name: kubevirtmgr
           ports:
@@ -337,11 +337,3 @@ spec:
   selector:
     app: kubevirt-manager
   type: ClusterIP
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  annotations: {}
-  labels:
-    name: syn-kubevirt-manager
-  name: syn-kubevirt-manager

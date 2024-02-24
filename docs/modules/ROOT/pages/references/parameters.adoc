@@ -224,15 +224,13 @@ default::
 ----
 dashboard:
   enabled: false <1>
-  version: main <2>
-  namespace: <3>
+  namespace: <2>
     annotations: {}
     labels: {}
     name: syn-kubevirt-manager
 ----
 <1> Enable KubeVirt Manager.
-<2> KubeVirt Manager version.
-<3> KubeVirt Manager namespace configuration.
+<2> KubeVirt Manager namespace configuration.
 
 See https://github.com/kubevirt-manager/kubevirt-manager/tree/main/[KubeVirt Manager Documentation].
 

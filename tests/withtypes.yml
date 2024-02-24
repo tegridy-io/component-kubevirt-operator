@@ -10,6 +10,9 @@ parameters:
       tenant_quota:
         enabled: true
 
+    dashboard:
+      enabled: true
+
     config:
       kubevirt:
         imagePullPolicy: IfNotPresent

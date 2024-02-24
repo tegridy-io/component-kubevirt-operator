@@ -89,24 +89,9 @@ local bundles_and_instances = {
   [if helper.isEnabled('tenant_quota') then '20_instance_quota']: instance_quota,
 };
 
-// Dashboard
-
-local dashboard = helper.load('dashboard-%s/bundled.yaml' % params.dashboard.version, params.dashboard.namespace.name) + [
-  kube.Namespace(params.dashboard.namespace.name) {
-    metadata+: {
-      annotations+: params.dashboard.namespace.annotations,
-      labels+: {
-        // Configure the namespaces so that the OCP4 cluster-monitoring
-        // Prometheus can find the servicemonitors and rules.
-        [if isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
-      } + com.makeMergeable(params.dashboard.namespace.labels),
-    },
-  },
-];
-
 // Types and Preferences
 local vm_types = {
-  ['40_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
+  ['30_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
@@ -120,7 +105,7 @@ local vm_types = {
 
 // Preferences
 local vm_preferences = {
-  ['50_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
+  ['40_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
@@ -135,7 +120,6 @@ local vm_preferences = {
 // Define outputs below
 {
   '00_namespace': namespace,
-  [if helper.isEnabled('dashboard') then '30_dashboard']: dashboard,
 }
 + vm_types
 + vm_preferences
