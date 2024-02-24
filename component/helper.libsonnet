@@ -6,7 +6,8 @@ local params = inv.parameters.kubevirt_operator;
 
 // Component
 local deployOlm = params.olm.enabled;
-local isEnabled(component) = std.get(params.operators, component, { enabled: false }).enabled;
+local isEnabled(component) = if component == 'dashboard' then params.dashboard.enabled
+else std.get(params.operators, component, { enabled: false }).enabled;
 
 // Loading and patching manifests
 local clusterScoped = [

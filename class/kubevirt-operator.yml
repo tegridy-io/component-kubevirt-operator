@@ -28,6 +28,10 @@ parameters:
       - type: https
         source: https://github.com/kubevirt/managed-tenant-quota/releases/download/${kubevirt_operator:operators:tenant_quota:version}/mtq-operator.yaml
         output_path: ${_base_directory}/manifests/mtq-${kubevirt_operator:operators:tenant_quota:version}/operator.yaml
+      # --- kubevirt manager
+      - type: https
+        source: https://raw.githubusercontent.com/kubevirt-manager/kubevirt-manager/main/kubernetes/bundled.yaml
+        output_path: ${_base_directory}/manifests/dashboard-${kubevirt_operator:dashboard:version}/bundled.yaml
     compile:
       - input_paths:
           - ${_base_directory}/component/app.jsonnet
