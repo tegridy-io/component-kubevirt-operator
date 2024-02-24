@@ -42,8 +42,8 @@ parameters:
       data_importer: {}
       network_addons: {}
       hostpath_provisioner: {}
-      quota: {}
-      scale: {}
+      schedule_scale: {}
+      tenant_quota: {}
 
 
     vm:
