@@ -39,6 +39,14 @@ parameters:
 
     config: {}
 
+    dashboard:
+      enabled: false
+      version: main
+      namespace:
+        annotations: {}
+        labels: {}
+        name: syn-kubevirt-manager
+
     vm:
       types: {}
       preferences: {}

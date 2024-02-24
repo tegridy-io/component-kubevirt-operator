@@ -214,6 +214,29 @@ config:
 ====
 
 
+== `dashboard`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+dashboard:
+  enabled: false <1>
+  version: main <2>
+  namespace: <3>
+    annotations: {}
+    labels: {}
+    name: syn-kubevirt-manager
+----
+<1> Enable KubeVirt Manager.
+<2> KubeVirt Manager version.
+<3> KubeVirt Manager namespace configuration.
+
+See https://github.com/kubevirt-manager/kubevirt-manager/tree/main/[KubeVirt Manager Documentation].
+
+
 == `vm`
 
 Cluster scoped VM types and preferences.

@@ -56,7 +56,7 @@ local subscription = olm.namespacedSubscription(
   },
 };
 
-// Bundles
+// Bundles and Instances
 local bundle_kubevirt = helper.load('kubevirt-%s/operator.yaml' % params.operators.kubevirt.version, namespaceName);
 local bundle_importer = helper.load('cdi-%s/operator.yaml' % params.operators.data_importer.version, namespaceName);
 local bundle_network = helper.load('cna-%s/crd.yaml' % params.operators.network_addons.version, namespaceName)
@@ -65,7 +65,6 @@ local bundle_hostpath = helper.load('hpp-%s/operator.yaml' % params.operators.ho
 local bundle_schedule = helper.load('ssp-%s/operator.yaml' % params.operators.schedule_scale.version, namespaceName);
 local bundle_quota = helper.load('mtq-%s/operator.yaml' % params.operators.tenant_quota.version, namespaceName);
 
-// Instances
 local instance_olm = helper.instance('olm', namespaceName);
 
 local instance_kubevirt = helper.instance('kubevirt', namespaceName);
@@ -75,9 +74,39 @@ local instance_hostpath = helper.instance('hostpath_provisioner', namespaceName)
 local instance_schedule = helper.instance('schedule_scale', namespaceName);
 local instance_quota = helper.instance('tenant_quota', namespaceName);
 
-// Instances
+local bundles_and_instances = {
+  [if helper.isEnabled('kubevirt') then '10_bundle_kubevirt']: bundle_kubevirt,
+  [if helper.isEnabled('data_importer') then '10_bundle_importer']: bundle_importer,
+  [if helper.isEnabled('network_addons') then '10_bundle_network']: bundle_network,
+  [if helper.isEnabled('hostpath_provisioner') then '10_bundle_hostpath']: bundle_hostpath,
+  [if helper.isEnabled('schedule_scale') then '10_bundle_schedule']: bundle_schedule,
+  [if helper.isEnabled('tenant_quota') then '10_bundle_quota']: bundle_quota,
+  [if helper.isEnabled('kubevirt') then '20_instance_kubevirt']: instance_kubevirt,
+  [if helper.isEnabled('data_importer') then '20_instance_importer']: instance_importer,
+  [if helper.isEnabled('network_addons') then '20_instance_network']: instance_network,
+  [if helper.isEnabled('hostpath_provisioner') then '20_instance_hostpath']: instance_hostpath,
+  [if helper.isEnabled('schedule_scale') then '20_instance_schedule']: instance_schedule,
+  [if helper.isEnabled('tenant_quota') then '20_instance_quota']: instance_quota,
+};
+
+// Dashboard
+
+local dashboard = helper.load('dashboard-%s/bundled.yaml' % params.dashboard.version, params.dashboard.namespace.name) + [
+  kube.Namespace(params.dashboard.namespace.name) {
+    metadata+: {
+      annotations+: params.dashboard.namespace.annotations,
+      labels+: {
+        // Configure the namespaces so that the OCP4 cluster-monitoring
+        // Prometheus can find the servicemonitors and rules.
+        [if isOpenshift then 'openshift.io/cluster-monitoring']: 'true',
+      } + com.makeMergeable(params.dashboard.namespace.labels),
+    },
+  },
+];
+
+// Types and Preferences
 local vm_types = {
-  ['30_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
+  ['40_type_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterInstancetype', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
@@ -91,7 +120,7 @@ local vm_types = {
 
 // Preferences
 local vm_preferences = {
-  ['40_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
+  ['50_preference_' + name]: kube._Object('instancetype.kubevirt.io/v1beta1', 'VirtualMachineClusterPreference', name) {
     metadata+: {
       labels+: {
         'app.kubernetes.io/managed-by': 'commodore',
@@ -106,24 +135,12 @@ local vm_preferences = {
 // Define outputs below
 {
   '00_namespace': namespace,
+  [if helper.isEnabled('dashboard') then '30_dashboard']: dashboard,
 }
++ vm_types
++ vm_preferences
 + if helper.deployOlm then {
   '10_operator_group': operator_group,
   '10_subscription': subscription,
   '20_instance': instance_olm,
-} else {
-         [if helper.isEnabled('kubevirt') then '10_bundle_kubevirt']: bundle_kubevirt,
-         [if helper.isEnabled('data_importer') then '10_bundle_importer']: bundle_importer,
-         [if helper.isEnabled('network_addons') then '10_bundle_network']: bundle_network,
-         [if helper.isEnabled('hostpath_provisioner') then '10_bundle_hostpath']: bundle_hostpath,
-         [if helper.isEnabled('schedule_scale') then '10_bundle_schedule']: bundle_schedule,
-         [if helper.isEnabled('tenant_quota') then '10_bundle_quota']: bundle_quota,
-         [if helper.isEnabled('kubevirt') then '20_instance_kubevirt']: instance_kubevirt,
-         [if helper.isEnabled('data_importer') then '20_instance_importer']: instance_importer,
-         [if helper.isEnabled('network_addons') then '20_instance_network']: instance_network,
-         [if helper.isEnabled('hostpath_provisioner') then '20_instance_hostpath']: instance_hostpath,
-         [if helper.isEnabled('schedule_scale') then '20_instance_schedule']: instance_schedule,
-         [if helper.isEnabled('tenant_quota') then '20_instance_quota']: instance_quota,
-       }
-       + vm_types
-       + vm_preferences
+} else bundles_and_instances

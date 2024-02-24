@@ -1,0 +1,14 @@
+apiVersion: instancetype.kubevirt.io/v1beta1
+kind: VirtualMachineClusterInstancetype
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/managed-by: commodore
+    app.kubernetes.io/name: xsmall
+    name: xsmall
+  name: xsmall
+spec:
+  cpu:
+    guest: 1
+  memory:
+    quest: 512Mi
