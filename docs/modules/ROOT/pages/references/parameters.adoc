@@ -44,11 +44,13 @@ olm:
 
 Hyperconverged cluster operator configuration.
 
-Deploying hyperconverged cluster operator will use OLM to install the operator.
-
-This operator will manage all other operator contained in this component.
-
 See https://github.com/kubevirt/hyperconverged-cluster-operator[Hyperconverged Cluster Operator Github] for documentation.
+
+[NOTE]
+====
+* Deploying hyperconverged cluster operator will use OLM to install the operator.
+* This operator will manage all other operator contained in this component.
+====
 
 
 == `operators`
@@ -166,49 +168,50 @@ Managed Tenant Quota operator configuration.
 
 == `config`
 
-Configure instances.
-
-
-=== `kubevirt`
-
 [horizontal]
 type:: dictionary
-default:: See https://kubevirt.io/user-guide/operations/customize_components[KubeVirt Documentation].
+default:: {}
 
+[NOTE]
+====
+If using olm / Hyperconverged Cluster operator all configuration is done under this field:
 
-=== `data_importer`
+[source,yaml]
+----
+config:
+  featureGates:
+    persistentReservation: true
+    withHostPassthroughCPU: true
+----
+====
 
-[horizontal]
-type:: dictionary
-default:: See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[Containerized Data Importer Documentation].
+[NOTE]
+====
+If using indivudual operators configure under specified keys:
 
+* `kubevirt`: See https://kubevirt.io/user-guide/operations/customize_components[KubeVirt Documentation].
+* `data_importer`: See https://github.com/kubevirt/containerized-data-importer/blob/main/doc/cdi-config.md[Containerized Data Importer Documentation].
+* `network_addons`: See https://github.com/kubevirt/cluster-network-addons-operator[Cluster Network Addons Documentation].
+* `hostpath_provisioner`: See https://github.com/kubevirt/hostpath-provisioner-operator[Hostpath Provisioner Documentation].
+* `schedule_scale`: See https://github.com/kubevirt/ssp-operator/blob/main/docs/configuration.md[Scheduling, Scale and Performance Documentation].
+* `teanant_quota`: See https://github.com/kubevirt/managed-tenant-quota[Managed Tenant Quota Documentation].
 
-=== `network_addons`
+[source,yaml]
+----
+config:
+  kubevirt:
+    imagePullPolicy: IfNotPresent
+    infra:
+      replicas: 1
 
-[horizontal]
-type:: dictionary
-default:: See https://github.com/kubevirt/cluster-network-addons-operator[Cluster Network Addons Documentation].
-
-
-=== `hostpath_provisioner`
-
-[horizontal]
-type:: dictionary
-default:: See https://github.com/kubevirt/hostpath-provisioner-operator[Hostpath Provisioner Documentation].
-
-
-=== `schedule_scale`
-
-[horizontal]
-type:: dictionary
-default:: See https://github.com/kubevirt/ssp-operator/blob/main/docs/configuration.md[Scheduling, Scale and Performance Documentation].
-
-
-=== `teanant_quota`
-
-[horizontal]
-type:: dictionary
-default:: See https://github.com/kubevirt/managed-tenant-quota[Managed Tenant Quota Documentation].
+  data_importer:
+    config:
+      featureGates:
+        - HonorWaitForFirstConsumer
+    infra:
+      replicas: 1
+----
+====
 
 
 == `vm`
@@ -224,6 +227,21 @@ default:: {}
 
 ClusterInstanceTypes configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
 
+[NOTE]
+====
+Example `VirtualMachineClusterInstancetype`:
+
+[source,yaml]
+----
+vm:
+  types:
+    small-4:
+      cpu:
+        guest: 2
+      memory:
+        quest: 4Gi
+----
+====
 
 === `preferences`
 
@@ -233,45 +251,16 @@ default:: {}
 
 ClusterInstancePreferences configuration, see https://kubevirt.io/user-guide/virtual_machines/instancetypes/[KubeVirt Documentation] for specs.
 
-
-== Example
+[NOTE]
+====
+Example `VirtualMachineClusterPreference`:
 
 [source,yaml]
 ----
-kubevirt_operator:
-  config:
-    kubevirt:
-      imagePullPolicy: IfNotPresent
-      infra:
-        nodeSelector:
-          kubernetes.io/os: linux
-        tolerations:
-          - key: CriticalAddonsOnly
-            operator: Exists
-      workload:
-        nodeSelector:
-          kubernetes.io/os: linux
-
-    importer:
-      config:
-        featureGates:
-          - HonorWaitForFirstConsumer
-      imagePullPolicy: IfNotPresent
-      infra:
-        nodeSelector:
-          kubernetes.io/os: linux
-        tolerations:
-          - key: CriticalAddonsOnly
-            operator: Exists
-      workload:
-        nodeSelector:
-          kubernetes.io/os: linux
-
-  cluster:
-    types:
-      small-4:
-        cpu:
-          guest: 2
-        memory:
-          quest: 4Gi
+vm:
+  preferences:
+    virtio:
+      devices:
+        preferredDiskBus: virtio
 ----
+====

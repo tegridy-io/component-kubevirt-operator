@@ -4,23 +4,9 @@ local kap = import 'lib/kapitan.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.kubevirt_operator;
 
-// OLM
-local deployOlm = params.olm.enabled;
-
-// Config
-local config(component) = if deployOlm then
-  com.makeMergeable(params.config.schedule_scale)
-  + com.makeMergeable(params.config.tenant_quota)
-  + com.makeMergeable(params.config.hostpath_provisioner)
-  + com.makeMergeable(params.config.network_addons)
-  + com.makeMergeable(params.config.data_importer)
-  + com.makeMergeable(params.config.kubevirt)
-else
-  std.get(params.config, component, {});
-
 // Component
+local deployOlm = params.olm.enabled;
 local isEnabled(component) = std.get(params.operators, component, { enabled: false }).enabled;
-local hasConfig(component) = std.length(config(component)) > 0;
 
 // Loading and patching manifests
 local clusterScoped = [
@@ -59,6 +45,27 @@ local patchManifests(path, namespace) = std.map(
   function(it) patch(it, namespace),
   manifests('kubevirt-operator/manifests/' + path)
 );
+
+// Config
+local config(component) = if deployOlm then {
+  [k]: params.config[k]
+  for k in std.filter(
+    function(it) !std.member(
+      [
+        'kubevirt',
+        'data_importer',
+        'network_addons',
+        'hostpath_provisioner',
+        'schedule_scale',
+        'tenant_quota',
+      ],
+      it
+    ),
+    std.objectFields(params.config)
+  )
+}
+else
+  std.get(params.config, component, {});
 
 // Instances
 local _instanceObj = {
@@ -109,6 +116,5 @@ local instance(component, namespace) = _instanceObj[component] {
   load: patchManifests,
   instance: instance,
   isEnabled: isEnabled,
-  hasConfig: hasConfig,
   deployOlm: deployOlm,
 }

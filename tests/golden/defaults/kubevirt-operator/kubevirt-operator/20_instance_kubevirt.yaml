@@ -7,10 +7,4 @@ metadata:
     app.kubernetes.io/name: instance
   name: instance
   namespace: syn-kubevirt-operator
-spec:
-  imagePullPolicy: IfNotPresent
-  infra:
-    replicas: 1
-  workload:
-    nodeSelector:
-      kubernetes.io/os: linux
+spec: {}

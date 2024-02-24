@@ -118,12 +118,12 @@ local vm_preferences = {
          [if helper.isEnabled('hostpath_provisioner') then '10_bundle_hostpath']: bundle_hostpath,
          [if helper.isEnabled('schedule_scale') then '10_bundle_schedule']: bundle_schedule,
          [if helper.isEnabled('tenant_quota') then '10_bundle_quota']: bundle_quota,
-         [if helper.hasConfig('kubevirt') then '20_instance_kubevirt']: instance_kubevirt,
-         [if helper.hasConfig('data_importer') then '20_instance_importer']: instance_importer,
-         [if helper.hasConfig('network_addons') then '20_instance_network']: instance_network,
-         [if helper.hasConfig('hostpath_provisioner') then '20_instance_hostpath']: instance_hostpath,
-         [if helper.hasConfig('schedule_scale') then '20_instance_schedule']: instance_schedule,
-         [if helper.hasConfig('tenant_quota') then '20_instance_quota']: instance_quota,
+         [if helper.isEnabled('kubevirt') then '20_instance_kubevirt']: instance_kubevirt,
+         [if helper.isEnabled('data_importer') then '20_instance_importer']: instance_importer,
+         [if helper.isEnabled('network_addons') then '20_instance_network']: instance_network,
+         [if helper.isEnabled('hostpath_provisioner') then '20_instance_hostpath']: instance_hostpath,
+         [if helper.isEnabled('schedule_scale') then '20_instance_schedule']: instance_schedule,
+         [if helper.isEnabled('tenant_quota') then '20_instance_quota']: instance_quota,
        }
        + vm_types
        + vm_preferences

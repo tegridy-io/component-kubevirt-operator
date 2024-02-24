@@ -37,14 +37,7 @@ parameters:
         enabled: false
         version: v1.2.0
 
-    config:
-      kubevirt: {}
-      data_importer: {}
-      network_addons: {}
-      hostpath_provisioner: {}
-      schedule_scale: {}
-      tenant_quota: {}
-
+    config: {}
 
     vm:
       types: {}
