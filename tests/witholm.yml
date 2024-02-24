@@ -15,46 +15,10 @@ parameters:
       enabled: true
 
     config:
-      kubevirt:
-        imagePullPolicy: IfNotPresent
-        infra:
-          nodeSelector:
-            kubernetes.io/os: linux
-          tolerations:
-            - key: CriticalAddonsOnly
-              operator: Exists
-        workload:
-          nodeSelector:
-            kubernetes.io/os: linux
+      featureGates:
+        persistentReservation: true
+        withHostPassthroughCPU: true
 
       data_importer:
-        config:
-          featureGates:
-            - HonorWaitForFirstConsumer
-        imagePullPolicy: IfNotPresent
-        infra:
-          nodeSelector:
-            kubernetes.io/os: linux
-        workload:
-          nodeSelector:
-            kubernetes.io/os: linux
-
-      network_addons:
-        multus: {}
-        multusDynamicNetworks: {}
-        linuxBridge: {}
-
-      hostpath_provisioner:
-        storagePools:
-          - name: "local"
-            path: "/var/hpvolumes"
-
-      schedule_scale:
-        featureGates:
-          deployTektonTaskResources: true
-          deployVmConsoleProxy: true
-
-      tenant_quota:
-        additionalMigrationResources:
-          requests.cpu: 500m
-          requests.memory: 512Mi
+        forgottenArtifact: true
+        mergedArtifact: true

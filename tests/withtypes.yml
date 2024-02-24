@@ -14,11 +14,7 @@ parameters:
       kubevirt:
         imagePullPolicy: IfNotPresent
         infra:
-          nodeSelector:
-            kubernetes.io/os: linux
-          tolerations:
-            - key: CriticalAddonsOnly
-              operator: Exists
+          replicas: 1
         workload:
           nodeSelector:
             kubernetes.io/os: linux

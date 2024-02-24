@@ -8,28 +8,6 @@ metadata:
   name: kubevirt-hyperconverged
   namespace: kubevirt-hyperconverged
 spec:
-  additionalMigrationResources:
-    requests.cpu: 500m
-    requests.memory: 512Mi
-  config:
-    featureGates:
-      - HonorWaitForFirstConsumer
   featureGates:
-    deployTektonTaskResources: true
-    deployVmConsoleProxy: true
-  imagePullPolicy: IfNotPresent
-  infra:
-    nodeSelector:
-      kubernetes.io/os: linux
-    tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
-  linuxBridge: {}
-  multus: {}
-  multusDynamicNetworks: {}
-  storagePools:
-    - name: local
-      path: /var/hpvolumes
-  workload:
-    nodeSelector:
-      kubernetes.io/os: linux
+    persistentReservation: true
+    withHostPassthroughCPU: true
