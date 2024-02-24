@@ -98,7 +98,7 @@ local instance(component, namespace) = _instanceObj[component] {
       'app.kubernetes.io/name': 'instance',
       'app.kubernetes.io/instance': component,
     },
-    name: 'instance',
+    name: if component == 'olm' then 'kubevirt-hyperconverged' else 'instance',
     namespace: namespace,
   },
   spec: config(component),
