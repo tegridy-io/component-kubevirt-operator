@@ -110,7 +110,7 @@ local vm_preferences = {
 + if helper.deployOlm then {
   '10_operator_group': operator_group,
   '10_subscription': subscription,
-  [if helper.hasConfig('olm') then '20_instance']: instance_olm,
+  '20_instance': instance_olm,
 } else {
          [if helper.isEnabled('kubevirt') then '10_bundle_kubevirt']: bundle_kubevirt,
          [if helper.isEnabled('data_importer') then '10_bundle_importer']: bundle_importer,

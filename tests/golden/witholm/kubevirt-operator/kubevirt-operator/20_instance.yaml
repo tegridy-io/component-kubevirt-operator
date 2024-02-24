@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: olm
     app.kubernetes.io/managed-by: commodore
     app.kubernetes.io/name: instance
-  name: instance
+  name: kubevirt-hyperconverged
   namespace: kubevirt-hyperconverged
 spec:
   additionalMigrationResources:
