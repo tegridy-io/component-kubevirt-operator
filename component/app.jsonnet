@@ -4,7 +4,10 @@ local params = inv.parameters.kubevirt_operator;
 local argocd = import 'lib/argocd.libjsonnet';
 local helper = import 'helper.libsonnet';
 
-local app = argocd.App('kubevirt-operator', params.namespace.name);
+local namespaceName = if helper.deployOlm then 'kubevirt-hyperconverged'
+else params.namespace.name;
+
+local app = argocd.App('kubevirt-operator', namespaceName);
 
 {
   'kubevirt-operator': app {
