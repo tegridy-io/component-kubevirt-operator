@@ -45,6 +45,10 @@ local subscription = olm.namespacedSubscription(
   params.olm.channel,
   catalog,
 ) {
+  metadata: {
+    name: packageName,
+    namespace: 'kubevirt-hyperconverged',
+  },
   spec+: {
     config+: {
       resources: params.olm.resources,
