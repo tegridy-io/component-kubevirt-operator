@@ -17,11 +17,11 @@ local app = argocd.App('kubevirt-operator', namespaceName);
           'ServerSideApply=true',
         ],
       },
-      ignoreDifferences: {
+      ignoreDifferences: [{
         group: 'apiextensions.k8s.io',
         kind: 'CustomResourceDefinition',
         name: 'cdis.cdi.kubevirt.io',
-      },
+      }],
     },
   },
 }
